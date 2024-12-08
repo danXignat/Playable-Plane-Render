@@ -28,8 +28,8 @@
 #pragma comment (lib, "OpenGL32.lib")
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1366;
+const unsigned int SCR_HEIGHT = 760;
 
 enum ECameraMovementType
 {
@@ -248,6 +248,9 @@ void Cleanup()
 	delete pCamera;
 }
 
+void LoadLightningShader(Shader& _shader, const glm::vec3& _lightPos);
+void LoadLighningTextureShaders(Shader& _shader, const glm::vec3& _lightPos);
+void DrawModel(Shader& _shader, glm::mat4& _model_matrix, Model& _model);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
@@ -256,10 +259,29 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 double deltaTime = 0.0f;	// time between current frame and last frame
 double lastFrame = 0.0f;
 
+// plane movements
+
+glm::vec3 planeMovement{ 0.0f, 0.0f, 0.0f };
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	if (key == GLFW_KEY_A && action == GLFW_PRESS) {
-
+		planeMovement[0] += 0.5;
+	}
+	if (key == GLFW_KEY_D && action == GLFW_PRESS) {
+		planeMovement[0] -= 0.5;
+	}
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+		planeMovement[1] += 0.5;
+	}
+	if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS) {
+		planeMovement[1] -= 0.5;
+	}
+	if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+		planeMovement[2] -= 0.5;
+	}
+	if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+		planeMovement[2] += 0.5;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -407,6 +429,9 @@ int main()
 
 	std::string planeObjFileName = (currentPath + "\\Models\\Plane\\source\\sr71.obj");
 	Model planeObjModel(planeObjFileName, false);
+	
+	std::string runawayObjFileName = (currentPath + "\\Models\\Runaway\\source\\Runway\\runaway1.obj");
+	Model runawayObjModel(runawayObjFileName, false);
 
 	// render loop
 	while (!glfwWindowShouldClose(window)) {
@@ -424,37 +449,18 @@ int main()
 		cubePos.x = 10 * sin(glfwGetTime());
 		cubePos.z = 10 * cos(glfwGetTime());
 
-		lightingShader.use();
-		lightingShader.SetVec3("objectColor", 0.5f, 1.0f, 0.31f);
-		lightingShader.SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
-		lightingShader.SetVec3("lightPos", lightPos);
-		lightingShader.SetVec3("viewPos", pCamera->GetPosition());
+		LoadLightningShader(lightingShader, lightPos);
 
-		lightingShader.setMat4("projection", pCamera->GetProjectionMatrix());
-		lightingShader.setMat4("view", pCamera->GetViewMatrix());
-
-		// render the model
-		glm::mat4 model = glm::scale(glm::mat4(1.0), glm::vec3(0.1f));
-		model = glm::translate(model, cubePos);
-		//flyingCubeModel.SetRootTransf(model);
-		//lightingShader.setMat4("model", model);
-		//flyingCubeModel.Draw(lightingShader);
-
-		lightingWithTextureShader.use();
-		lightingWithTextureShader.SetVec3("objectColor", 0.5f, 1.0f, 0.31f);
-		lightingWithTextureShader.SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
-		lightingWithTextureShader.SetVec3("lightPos", lightPos);
-		lightingWithTextureShader.SetVec3("viewPos", pCamera->GetPosition());
-		lightingWithTextureShader.setInt("texture_diffuse1", 0);
-
-
-		lightingWithTextureShader.setMat4("projection", pCamera->GetProjectionMatrix());
-		lightingWithTextureShader.setMat4("view", pCamera->GetViewMatrix());
+		LoadLighningTextureShaders(lightingWithTextureShader, lightPos);
 
 		glm::mat4 planeModel = glm::scale(glm::mat4(1.0), glm::vec3(0.1f));
-		planeModel = glm::translate(planeModel, lightPos);
-		lightingWithTextureShader.setMat4("model", planeModel);
-		planeObjModel.Draw(lightingWithTextureShader);
+		//planeModel = glm::rotate(planeModel, glm::radians(90), glm::vec3(0.0f, 1.0f, 0.0f);
+		planeModel = glm::translate(planeModel, planeMovement);
+		DrawModel(lightingWithTextureShader, planeModel, planeObjModel);
+
+		glm::mat4 runawayModel = glm::scale(glm::mat4(1.0), glm::vec3(0.001f));
+		runawayModel = glm::translate(runawayModel, glm::vec3(0.0f, -100.0f, -500.0f));
+		DrawModel(lightingWithTextureShader, runawayModel, runawayObjModel);
 
 		// also draw the lamp object
 		lampShader.use();
@@ -481,6 +487,32 @@ int main()
 	// glfw: terminate, clearing all previously allocated GLFW resources
 	glfwTerminate();
 	return 0;
+}
+
+void LoadLightningShader(Shader& _shader, const glm::vec3& _lightPos) {
+	_shader.use();
+	_shader.SetVec3("objectColor", 0.5f, 1.0f, 0.31f);
+	_shader.SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
+	_shader.SetVec3("lightPos", _lightPos);
+	_shader.SetVec3("viewPos", pCamera->GetPosition());
+	_shader.setMat4("projection", pCamera->GetProjectionMatrix());
+	_shader.setMat4("view", pCamera->GetViewMatrix());
+}
+
+void LoadLighningTextureShaders(Shader& _shader, const glm::vec3& _lightPos) {
+	_shader.use();
+	_shader.SetVec3("objectColor", 0.5f, 1.0f, 0.31f);
+	_shader.SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
+	_shader.SetVec3("lightPos", _lightPos);
+	_shader.SetVec3("viewPos", pCamera->GetPosition());
+	_shader.setInt("texture_diffuse1", 0);
+	_shader.setMat4("projection", pCamera->GetProjectionMatrix());
+	_shader.setMat4("view", pCamera->GetViewMatrix());
+}
+
+void DrawModel(Shader& _shader, glm::mat4& _model_matrix, Model& _model) {
+	_shader.setMat4("model", _model_matrix);
+	_model.Draw(_shader);
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
