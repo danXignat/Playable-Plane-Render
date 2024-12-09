@@ -190,7 +190,7 @@ private:
 		//std::cout << "yaw = " << yaw << std::endl;
 		//std::cout << "pitch = " << pitch << std::endl;
 
-		// Avem grijã sã nu ne dãm peste cap
+		// Avem grijï¿½ sï¿½ nu ne dï¿½m peste cap
 		if (constrainPitch) {
 			if (pitch > 89.0f)
 				pitch = 89.0f;
@@ -198,7 +198,7 @@ private:
 				pitch = -89.0f;
 		}
 
-		// Se modificã vectorii camerei pe baza unghiurilor Euler
+		// Se modificï¿½ vectorii camerei pe baza unghiurilor Euler
 		UpdateCameraVectors();
 	}
 
@@ -433,6 +433,9 @@ int main()
 	std::string runawayObjFileName = (currentPath + "\\Models\\Runaway\\source\\Runway\\runaway1.obj");
 	Model runawayObjModel(runawayObjFileName, false);
 
+	std::string airPortObjFileName = (currentPath + "\\Models\\AirPort\\airport.obj");
+	Model airPortObjModel(airPortObjFileName, false);
+
 	// render loop
 	while (!glfwWindowShouldClose(window)) {
 		// per-frame time logic
@@ -457,6 +460,10 @@ int main()
 		//planeModel = glm::rotate(planeModel, glm::radians(90), glm::vec3(0.0f, 1.0f, 0.0f);
 		planeModel = glm::translate(planeModel, planeMovement);
 		DrawModel(lightingWithTextureShader, planeModel, planeObjModel);
+
+		glm::mat4 airPortModel = glm::scale(glm::mat4(1.0), glm::vec3(0.001f));
+		airPortModel = glm::translate(airPortModel, glm::vec3(0.0f, -100.0f, -500.0f));
+		DrawModel(lightingWithTextureShader, airPortModel, airPortObjModel);
 
 		glm::mat4 runawayModel = glm::scale(glm::mat4(1.0), glm::vec3(0.001f));
 		runawayModel = glm::translate(runawayModel, glm::vec3(0.0f, -100.0f, -500.0f));
