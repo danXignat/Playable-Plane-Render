@@ -1,27 +1,9 @@
 // ViewOBJModel.cpp : This file contains the 'main' function. Program execution begins and ends there.
 
-#include <Windows.h>
-#include <locale>
-#include <codecvt>
-
-#include <stdlib.h> // necesare pentru citirea shader-elor
-#include <stdio.h>
-#include <math.h> 
-
-#include <GL/glew.h>
-
-#include <GLM.hpp>
-#include <gtc/matrix_transform.hpp>
-#include <gtc/type_ptr.hpp>
-
-#include <glfw3.h>
-
-#include <iostream>
-#include <fstream>
-#include <sstream>
 #include "Shader.h"
 #include "Model.h"
 #include "FlyingCube.h"
+#include "Camera.h"
 
 #pragma comment (lib, "glfw3dll.lib")
 #pragma comment (lib, "glew32.lib")
@@ -30,215 +12,6 @@
 // settings
 const unsigned int SCR_WIDTH = 1366;
 const unsigned int SCR_HEIGHT = 760;
-
-enum ECameraMovementType
-{
-	UNKNOWN,
-	FORWARD,
-	BACKWARD,
-	LEFT,
-	RIGHT,
-	UP,
-	DOWN
-};
-
-class Camera
-{
-private:
-	// Default camera values
-	const float zNEAR = 0.1f;
-	const float zFAR = 500.f;
-	const float YAW = -90.0f;
-	const float PITCH = 0.0f;
-	const float FOV = 45.0f;
-	glm::vec3 startPosition;
-
-public:
-	Camera(const int width, const int height, const glm::vec3& position)
-	{
-		startPosition = position;
-		Set(width, height, position);
-	}
-
-	void Set(const int width, const int height, const glm::vec3& position)
-	{
-		this->isPerspective = true;
-		this->yaw = YAW;
-		this->pitch = PITCH;
-
-		this->FoVy = FOV;
-		this->width = width;
-		this->height = height;
-		this->zNear = zNEAR;
-		this->zFar = zFAR;
-
-		this->worldUp = glm::vec3(0, 1, 0);
-		this->position = position;
-
-		lastX = width / 2.0f;
-		lastY = height / 2.0f;
-		bFirstMouseMove = true;
-
-		UpdateCameraVectors();
-	}
-
-	void Reset(const int width, const int height)
-	{
-		Set(width, height, startPosition);
-	}
-
-	void Reshape(int windowWidth, int windowHeight)
-	{
-		width = windowWidth;
-		height = windowHeight;
-
-		// define the viewport transformation
-		glViewport(0, 0, windowWidth, windowHeight);
-	}
-
-	const glm::mat4 GetViewMatrix() const
-	{
-		// Returns the View Matrix
-		return glm::lookAt(position, position + forward, up);
-	}
-
-	const glm::vec3 GetPosition() const
-	{
-		return position;
-	}
-
-	const glm::mat4 GetProjectionMatrix() const
-	{
-		glm::mat4 Proj = glm::mat4(1);
-		if (isPerspective) {
-			float aspectRatio = ((float)(width)) / height;
-			Proj = glm::perspective(glm::radians(FoVy), aspectRatio, zNear, zFar);
-		}
-		else {
-			float scaleFactor = 2000.f;
-			Proj = glm::ortho<float>(
-				-width / scaleFactor, width / scaleFactor,
-				-height / scaleFactor, height / scaleFactor, -zFar, zFar);
-		}
-		return Proj;
-	}
-
-	void ProcessKeyboard(ECameraMovementType direction, float deltaTime)
-	{
-		float velocity = (float)(cameraSpeedFactor * deltaTime);
-		switch (direction) {
-		case ECameraMovementType::FORWARD:
-			position += forward * velocity;
-			break;
-		case ECameraMovementType::BACKWARD:
-			position -= forward * velocity;
-			break;
-		case ECameraMovementType::LEFT:
-			position -= right * velocity;
-			break;
-		case ECameraMovementType::RIGHT:
-			position += right * velocity;
-			break;
-		case ECameraMovementType::UP:
-			position += up * velocity;
-			break;
-		case ECameraMovementType::DOWN:
-			position -= up * velocity;
-			break;
-		}
-	}
-
-	void MouseControl(float xPos, float yPos)
-	{
-		if (bFirstMouseMove) {
-			lastX = xPos;
-			lastY = yPos;
-			bFirstMouseMove = false;
-		}
-
-		float xChange = xPos - lastX;
-		float yChange = lastY - yPos;
-		lastX = xPos;
-		lastY = yPos;
-
-		if (fabs(xChange) <= 1e-6 && fabs(yChange) <= 1e-6) {
-			return;
-		}
-		xChange *= mouseSensitivity;
-		yChange *= mouseSensitivity;
-
-		ProcessMouseMovement(xChange, yChange);
-	}
-
-	void ProcessMouseScroll(float yOffset)
-	{
-		if (FoVy >= 1.0f && FoVy <= 90.0f) {
-			FoVy -= yOffset;
-		}
-		if (FoVy <= 1.0f)
-			FoVy = 1.0f;
-		if (FoVy >= 90.0f)
-			FoVy = 90.0f;
-	}
-
-private:
-	void ProcessMouseMovement(float xOffset, float yOffset, bool constrainPitch = true)
-	{
-		yaw += xOffset;
-		pitch += yOffset;
-
-		//std::cout << "yaw = " << yaw << std::endl;
-		//std::cout << "pitch = " << pitch << std::endl;
-
-		// Avem grij� s� nu ne d�m peste cap
-		if (constrainPitch) {
-			if (pitch > 89.0f)
-				pitch = 89.0f;
-			if (pitch < -89.0f)
-				pitch = -89.0f;
-		}
-
-		// Se modific� vectorii camerei pe baza unghiurilor Euler
-		UpdateCameraVectors();
-	}
-
-	void UpdateCameraVectors()
-	{
-		// Calculate the new forward vector
-		this->forward.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-		this->forward.y = sin(glm::radians(pitch));
-		this->forward.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-		this->forward = glm::normalize(this->forward);
-		// Also re-calculate the Right and Up vector
-		right = glm::normalize(glm::cross(forward, worldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-		up = glm::normalize(glm::cross(right, forward));
-	}
-
-protected:
-	const float cameraSpeedFactor = 250.0f;
-	const float mouseSensitivity = 0.1f;
-
-	// Perspective properties
-	float zNear;
-	float zFar;
-	float FoVy;
-	int width;
-	int height;
-	bool isPerspective;
-
-	glm::vec3 position;
-	glm::vec3 forward;
-	glm::vec3 right;
-	glm::vec3 up;
-	glm::vec3 worldUp;
-
-	// Euler Angles
-	float yaw;
-	float pitch;
-
-	bool bFirstMouseMove = true;
-	float lastX = 0.f, lastY = 0.f;
-};
 
 GLuint ProjMatrixLocation, ViewMatrixLocation, WorldMatrixLocation;
 Camera* pCamera = nullptr;
@@ -262,27 +35,53 @@ double lastFrame = 0.0f;
 // plane movements
 
 glm::vec3 planeMovement{ 0.0f, 0.0f, 0.0f };
+float rotationDeg = 90.0f;
+const float baseStepX = 0.0f;
+const float baseStepY = 0.5f;
+const float baseStepZ = 0.5f;
+float direct = glm::sqrt(glm::pow(baseStepX, 2) + glm::pow(baseStepZ, 2));
+float stepX = baseStepX;
+float stepY = baseStepY;
+float stepZ = baseStepZ;
+
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_A && action == GLFW_PRESS) {
-		planeMovement[0] += 0.5;
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		//planeMovement[0] += step;
+		//pCamera->Set(planeMovement);
+		rotationDeg += 10.0f;
+		if (rotationDeg == 360.0f)
+			rotationDeg = 0.0f;
 	}
-	if (key == GLFW_KEY_D && action == GLFW_PRESS) {
-		planeMovement[0] -= 0.5;
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		//planeMovement[0] -= step;
+		rotationDeg -= 10.0f;
+		if (rotationDeg == 0.0f)
+			rotationDeg = 360.0f;
 	}
-	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
-		planeMovement[1] += 0.5;
+
+	stepX = glm::sin(glm::radians(rotationDeg)) * direct;
+	stepZ = glm::cos(glm::radians(rotationDeg)) * direct;
+
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	{
+		planeMovement[1] += stepY;
 	}
-	if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS) {
-		planeMovement[1] -= 0.5;
+	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
+	{
+		planeMovement[1] -= stepY;
 	}
-	if (key == GLFW_KEY_W && action == GLFW_PRESS) {
-		planeMovement[2] -= 0.5;
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		planeMovement[0] += stepX;
+		planeMovement[2] += stepZ;
 	}
-	if (key == GLFW_KEY_S && action == GLFW_PRESS) {
-		planeMovement[2] += 0.5;
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		planeMovement[0] -= stepX;
+		planeMovement[2] -= stepZ;
 	}
+
+	std::cout << "X: " << planeMovement[0] << "|  Y: " << planeMovement[1] << "|  Z: " << planeMovement[2] << "\n";
 
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
@@ -304,7 +103,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		int width, height;
 		glfwGetWindowSize(window, &width, &height);
 		pCamera->Reset(width, height);
-
 	}
 }
 
@@ -381,8 +179,10 @@ int main()
 		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
 		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 	};
-	// first, configure the cube's VAO (and VBO)
+	//VAO, VBO
 	unsigned int VBO, cubeVAO;
+
+	// first, configure the cube's VAO (and VBO)
 	glGenVertexArrays(1, &cubeVAO);
 	glGenBuffers(1, &VBO);
 
@@ -409,9 +209,9 @@ int main()
 	glEnableVertexAttribArray(0);
 
 	// Create camera
-	pCamera = new Camera(SCR_WIDTH, SCR_HEIGHT, glm::vec3(0.0, 0.0, 3.0));
+	pCamera = new Camera(SCR_WIDTH, SCR_HEIGHT, glm::vec3(0.0, 0.5, -2.0));
 
-	glm::vec3 lightPos(0.0f, 2.0f, 1.0f);
+	glm::vec3 lightPos(0.0f, 4.0f, 0.0f);
 	glm::vec3 cubePos(0.0f, 5.0f, 1.0f);
 
 	wchar_t buffer[MAX_PATH];
@@ -433,8 +233,8 @@ int main()
 	std::string runawayObjFileName = (currentPath + "\\Models\\Runaway\\source\\Runway\\runaway1.obj");
 	Model runawayObjModel(runawayObjFileName, false);
 
-	std::string airPortObjFileName = (currentPath + "\\Models\\AirPort\\airport.obj");
-	Model airPortObjModel(airPortObjFileName, false);
+	/*std::string airPortObjFileName = (currentPath + "\\Models\\AirPort\\airport.obj");
+	Model airPortObjModel(airPortObjFileName, false);*/
 
 	// render loop
 	while (!glfwWindowShouldClose(window)) {
@@ -459,14 +259,16 @@ int main()
 		glm::mat4 planeModel = glm::scale(glm::mat4(1.0), glm::vec3(0.1f));
 		//planeModel = glm::rotate(planeModel, glm::radians(90), glm::vec3(0.0f, 1.0f, 0.0f);
 		planeModel = glm::translate(planeModel, planeMovement);
+		planeModel = glm::rotate(planeModel, glm::radians(90.0f), glm::vec3(0.0f, 0.1f, 0.0f));
+		planeModel = glm::rotate(planeModel, glm::radians(rotationDeg), glm::vec3(0, 1, 0));
 		DrawModel(lightingWithTextureShader, planeModel, planeObjModel);
 
-		glm::mat4 airPortModel = glm::scale(glm::mat4(1.0), glm::vec3(0.001f));
+		/*glm::mat4 airPortModel = glm::scale(glm::mat4(1.0), glm::vec3(0.001f));
 		airPortModel = glm::translate(airPortModel, glm::vec3(0.0f, -100.0f, -500.0f));
-		DrawModel(lightingWithTextureShader, airPortModel, airPortObjModel);
+		DrawModel(lightingWithTextureShader, airPortModel, airPortObjModel);*/
 
 		glm::mat4 runawayModel = glm::scale(glm::mat4(1.0), glm::vec3(0.001f));
-		runawayModel = glm::translate(runawayModel, glm::vec3(0.0f, -100.0f, -500.0f));
+		runawayModel = glm::translate(runawayModel, glm::vec3(0.0f, -900.0f, -6000.0f));
 		DrawModel(lightingWithTextureShader, runawayModel, runawayObjModel);
 
 		// also draw the lamp object

@@ -146,6 +146,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Callback.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="FlyingCube.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -156,7 +158,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Callback.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="FlyingCube.h" />
+    <ClInclude Include="Includes.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Shader.h" />
