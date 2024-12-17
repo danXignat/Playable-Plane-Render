@@ -233,8 +233,8 @@ int main()
 
 	//skybox faces declaration
 	std::vector<std::string> faces{
-		(currentPath + "\\SkyboxImg\\LeftImage.png").c_str(),
 		(currentPath + "\\SkyboxImg\\RightImage.png").c_str(),
+		(currentPath + "\\SkyboxImg\\LeftImage.png").c_str(),
 		(currentPath + "\\SkyboxImg\\TopImage.png").c_str(),
 		(currentPath + "\\SkyboxImg\\BottomImage.png").c_str(),
 		(currentPath + "\\SkyboxImg\\FrontImage.png").c_str(),

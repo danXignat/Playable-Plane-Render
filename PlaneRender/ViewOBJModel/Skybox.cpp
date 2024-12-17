@@ -15,7 +15,7 @@ Skybox::Skybox(const std::vector<std::string>& faces) {
         -1.0f, -1.0f, -1.0f,
         -1.0f,  1.0f, -1.0f,
         -1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f,  1.0f,
+        -1.0f,  -1.0f,  1.0f,
         -1.0f,  1.0f,  1.0f,
 
          1.0f, -1.0f, -1.0f,
