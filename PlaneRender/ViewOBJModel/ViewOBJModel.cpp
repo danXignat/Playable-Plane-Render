@@ -4,7 +4,7 @@
 #include "Model.h"
 #include "FlyingCube.h"
 #include "Camera.h"
-
+#include "Skybox.h"
 #pragma comment (lib, "glfw3dll.lib")
 #pragma comment (lib, "glew32.lib")
 #pragma comment (lib, "OpenGL32.lib")
@@ -45,6 +45,8 @@ float stepY = baseStepY;
 float stepZ = baseStepZ;
 
 
+
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
@@ -53,12 +55,14 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		rotationDeg += 10.0f;
 		if (rotationDeg == 360.0f)
 			rotationDeg = 0.0f;
+		//rotate left
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 		//planeMovement[0] -= step;
 		rotationDeg -= 10.0f;
 		if (rotationDeg == 0.0f)
 			rotationDeg = 360.0f;
+		//rotate right
 	}
 
 	stepX = glm::sin(glm::radians(rotationDeg)) * direct;
@@ -67,18 +71,22 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
 		planeMovement[1] += stepY;
+		//ascend
 	}
 	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
 	{
 		planeMovement[1] -= stepY;
+		//descend
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		planeMovement[0] += stepX;
 		planeMovement[2] += stepZ;
+		//move forth
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		planeMovement[0] -= stepX;
 		planeMovement[2] -= stepZ;
+		//move backward
 	}
 
 	std::cout << "X: " << planeMovement[0] << "|  Y: " << planeMovement[1] << "|  Z: " << planeMovement[2] << "\n";
@@ -129,7 +137,7 @@ int main()
 	glfwSetKeyCallback(window, key_callback);
 
 	// tell GLFW to capture our mouse
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glewInit();
 
@@ -223,6 +231,16 @@ int main()
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
 	std::string currentPath = converter.to_bytes(wscurrentPath);
 
+	//skybox faces declaration
+	std::vector<std::string> faces{
+		(currentPath + "\\SkyboxImg\\LeftImage.png").c_str(),
+		(currentPath + "\\SkyboxImg\\RightImage.png").c_str(),
+		(currentPath + "\\SkyboxImg\\TopImage.png").c_str(),
+		(currentPath + "\\SkyboxImg\\BottomImage.png").c_str(),
+		(currentPath + "\\SkyboxImg\\FrontImage.png").c_str(),
+		(currentPath + "\\SkyboxImg\\BackImage.png").c_str()
+	};
+
 	Shader lightingShader((currentPath + "\\Shaders\\PhongLight.vs").c_str(), (currentPath + "\\Shaders\\PhongLight.fs").c_str());
 	Shader lightingWithTextureShader((currentPath + "\\Shaders\\PhongLightWithTexture.vs").c_str(), (currentPath + "\\Shaders\\PhongLightWithTexture.fs").c_str());
 	Shader lampShader((currentPath + "\\Shaders\\Lamp.vs").c_str(), (currentPath + "\\Shaders\\Lamp.fs").c_str());
@@ -235,6 +253,9 @@ int main()
 
 	/*std::string airPortObjFileName = (currentPath + "\\Models\\AirPort\\airport.obj");
 	Model airPortObjModel(airPortObjFileName, false);*/
+	
+	Skybox skybox(faces);
+	Shader skyboxShader((currentPath+"\\Shaders\\Skybox.vs").c_str(), (currentPath+"\\Shaders\\Skybox.fs").c_str());
 
 	// render loop
 	while (!glfwWindowShouldClose(window)) {
@@ -278,6 +299,11 @@ int main()
 		glm::mat4 lightModel = glm::translate(glm::mat4(1.0), lightPos);
 		lightModel = glm::scale(lightModel, glm::vec3(0.05f)); // a smaller cube
 		lampShader.setMat4("model", lightModel);
+
+		skyboxShader.use();
+		skyboxShader.setMat4("view", glm::mat4(glm::mat3(pCamera->GetViewMatrix())));
+		skyboxShader.setMat4("projection", pCamera->GetProjectionMatrix());
+		skybox.Draw(skyboxShader);
 
 		glBindVertexArray(lightVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
