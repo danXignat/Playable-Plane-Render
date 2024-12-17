@@ -36,32 +36,61 @@ double lastFrame = 0.0f;
 
 glm::vec3 planeMovement{ 0.0f, 0.0f, 0.0f };
 float rotationDeg = 90.0f;
+float tiltDeg = 0.0f;
 const float baseStepX = 0.0f;
-const float baseStepY = 0.5f;
-const float baseStepZ = 0.5f;
+const float baseStepY = 0.05f;
+const float baseStepZ = 0.05f;
 float direct = glm::sqrt(glm::pow(baseStepX, 2) + glm::pow(baseStepZ, 2));
 float stepX = baseStepX;
 float stepY = baseStepY;
 float stepZ = baseStepZ;
 
 
-
-
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+	std::cout << "X: " << planeMovement[0] << "|  Y: " << planeMovement[1] << "|  Z: " << planeMovement[2] << "\n";
+
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+		pCamera->ProcessKeyboard(FORWARD, (float)deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+		pCamera->ProcessKeyboard(BACKWARD, (float)deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+		pCamera->ProcessKeyboard(LEFT, (float)deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+		pCamera->ProcessKeyboard(RIGHT, (float)deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS)
+		pCamera->ProcessKeyboard(UP, (float)deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS)
+		pCamera->ProcessKeyboard(DOWN, (float)deltaTime);
+
+	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+		int width, height;
+		glfwGetWindowSize(window, &width, &height);
+		pCamera->Reset(width, height);
+	}
+}
+void processInput(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 		//planeMovement[0] += step;
 		//pCamera->Set(planeMovement);
-		rotationDeg += 10.0f;
+		rotationDeg += 0.1f;
 		if (rotationDeg == 360.0f)
 			rotationDeg = 0.0f;
+		if (tiltDeg < 80.0f);
+			tiltDeg += 0.1f;
+		
 		//rotate left
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 		//planeMovement[0] -= step;
-		rotationDeg -= 10.0f;
+		rotationDeg -= 0.1f;
 		if (rotationDeg == 0.0f)
 			rotationDeg = 360.0f;
+		if (tiltDeg > -80.0f);
+			tiltDeg -= 0.1f;
 		//rotate right
 	}
 
@@ -87,30 +116,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		planeMovement[0] -= stepX;
 		planeMovement[2] -= stepZ;
 		//move backward
-	}
-
-	std::cout << "X: " << planeMovement[0] << "|  Y: " << planeMovement[1] << "|  Z: " << planeMovement[2] << "\n";
-
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
-
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-		pCamera->ProcessKeyboard(FORWARD, (float)deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-		pCamera->ProcessKeyboard(BACKWARD, (float)deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-		pCamera->ProcessKeyboard(LEFT, (float)deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-		pCamera->ProcessKeyboard(RIGHT, (float)deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS)
-		pCamera->ProcessKeyboard(UP, (float)deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS)
-		pCamera->ProcessKeyboard(DOWN, (float)deltaTime);
-
-	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
-		int width, height;
-		glfwGetWindowSize(window, &width, &height);
-		pCamera->Reset(width, height);
 	}
 }
 
@@ -219,6 +224,8 @@ int main()
 	// Create camera
 	pCamera = new Camera(SCR_WIDTH, SCR_HEIGHT, glm::vec3(0.0, 0.5, -2.0));
 
+
+	
 	glm::vec3 lightPos(0.0f, 4.0f, 0.0f);
 	glm::vec3 cubePos(0.0f, 5.0f, 1.0f);
 
@@ -259,6 +266,9 @@ int main()
 
 	// render loop
 	while (!glfwWindowShouldClose(window)) {
+
+		processInput(window);
+
 		// per-frame time logic
 		double currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
@@ -277,12 +287,18 @@ int main()
 
 		LoadLighningTextureShaders(lightingWithTextureShader, lightPos);
 
+		//glm::vec3 cameraOffsetRotation = glm::vec3(planeMovement[0], planeMovement[1], planeMovement[2]);
+
+		//pCamera->Set(cameraOffsetRotation);
+		
 		glm::mat4 planeModel = glm::scale(glm::mat4(1.0), glm::vec3(0.1f));
 		//planeModel = glm::rotate(planeModel, glm::radians(90), glm::vec3(0.0f, 1.0f, 0.0f);
 		planeModel = glm::translate(planeModel, planeMovement);
 		planeModel = glm::rotate(planeModel, glm::radians(90.0f), glm::vec3(0.0f, 0.1f, 0.0f));
+		//planeModel = glm::rotate(planeModel, glm::radians(tiltDeg), glm::vec3(0, 0, 1));
 		planeModel = glm::rotate(planeModel, glm::radians(rotationDeg), glm::vec3(0, 1, 0));
 		DrawModel(lightingWithTextureShader, planeModel, planeObjModel);
+
 
 		/*glm::mat4 airPortModel = glm::scale(glm::mat4(1.0), glm::vec3(0.001f));
 		airPortModel = glm::translate(airPortModel, glm::vec3(0.0f, -100.0f, -500.0f));
