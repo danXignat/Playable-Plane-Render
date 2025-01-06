@@ -258,8 +258,8 @@ int main()
 	std::string runawayObjFileName = (currentPath + "\\Models\\Runaway\\source\\Runway\\runaway1.obj");
 	Model runawayObjModel(runawayObjFileName, false);
 
-	/*std::string airPortObjFileName = (currentPath + "\\Models\\AirPort\\airport.obj");
-	Model airPortObjModel(airPortObjFileName, false);*/
+	std::string pistaObjFileName = (currentPath + "\\Models\\pista\\pista.obj");
+	Model pistaObjModel(pistaObjFileName, false);
 	
 	Skybox skybox(faces);
 	Shader skyboxShader((currentPath+"\\Shaders\\Skybox.vs").c_str(), (currentPath+"\\Shaders\\Skybox.fs").c_str());
@@ -300,9 +300,9 @@ int main()
 		DrawModel(lightingWithTextureShader, planeModel, planeObjModel);
 
 
-		/*glm::mat4 airPortModel = glm::scale(glm::mat4(1.0), glm::vec3(0.001f));
-		airPortModel = glm::translate(airPortModel, glm::vec3(0.0f, -100.0f, -500.0f));
-		DrawModel(lightingWithTextureShader, airPortModel, airPortObjModel);*/
+		glm::mat4 pistaModel = glm::scale(glm::mat4(1.0), glm::vec3(0.001f));
+		pistaModel = glm::translate(pistaModel, glm::vec3(0.0f, 0.0f, -500.0f));
+		DrawModel(lightingWithTextureShader, pistaModel, pistaObjModel);
 
 		glm::mat4 runawayModel = glm::scale(glm::mat4(1.0), glm::vec3(0.001f));
 		runawayModel = glm::translate(runawayModel, glm::vec3(0.0f, -900.0f, -6000.0f));
