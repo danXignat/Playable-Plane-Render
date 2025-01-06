@@ -2,7 +2,7 @@
 
 MainWindow::MainWindow() :
 	window{ _initWindow() },
-	pCamera{ std::make_unique<Camera>(SCR_WIDTH, SCR_HEIGHT, glm::vec3(110.0f, 30.0f, 40.0f)) },
+	pCamera{ std::make_unique<Camera>(SCR_WIDTH, SCR_HEIGHT, glm::vec3(110.0f, 30.0f, 35.0f)) },
 	currentPath{_initCurrPath()},
 	lightingShader{ (currentPath + "\\Shaders\\PhongLight.vs").c_str(), (currentPath + "\\Shaders\\PhongLight.fs").c_str() },
 	lightingWithTextureShader{ (currentPath + "\\Shaders\\PhongLightWithTexture.vs").c_str(), (currentPath + "\\Shaders\\PhongLightWithTexture.fs").c_str() },
