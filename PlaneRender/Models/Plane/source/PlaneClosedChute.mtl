@@ -1,0 +1,252 @@
+# Blender 4.3.2 MTL File: 'PlaneClosedChute.blend'
+# www.blender.org
+
+newmtl DefaultWhite
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd exhaust.png
+
+newmtl DefaultWhite_ai.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd ai.png
+
+newmtl DefaultWhite_ai2.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd ai2.png
+
+newmtl DefaultWhite_altimeter.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd altimeter.png
+
+newmtl DefaultWhite_aoa.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd aoa.png
+
+newmtl DefaultWhite_asi.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd asi.png
+
+newmtl DefaultWhite_clock.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd clock.png
+
+newmtl DefaultWhite_divers.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd divers.png
+
+newmtl DefaultWhite_egt.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd egt.png
+
+newmtl DefaultWhite_fuel.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd fuel.png
+
+newmtl DefaultWhite_fuelflow.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd fuelflow.png
+
+newmtl DefaultWhite_hsi.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd hsi.png
+
+newmtl DefaultWhite_interior.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd interior.png
+
+newmtl DefaultWhite_mach.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd mach.png
+
+newmtl DefaultWhite_mag-compass.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd mag-compass.png
+
+newmtl DefaultWhite_oilpressure.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd oilpressure.png
+
+newmtl DefaultWhite_oiltemp.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd oiltemp.png
+
+newmtl DefaultWhite_panel.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd panel.png
+
+newmtl DefaultWhite_radar.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd radar.png
+
+newmtl DefaultWhite_rpm.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd rpm.png
+
+newmtl DefaultWhite_seat.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd seat.png
+
+newmtl DefaultWhite_texture.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd texture.png
+
+newmtl DefaultWhite_trim.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd trim.png
+
+newmtl DefaultWhite_vsi.png
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd vsi.png
+
+newmtl Transparent
+Ns 96.078453
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.390625 0.390625 0.390625
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.300000
+illum 9

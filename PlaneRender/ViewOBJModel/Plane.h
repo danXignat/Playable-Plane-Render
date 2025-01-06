@@ -4,7 +4,7 @@
 
 class Plane {
 public:
-	static constexpr const char* const relativePath{ "\\Models\\Plane\\source\\sr71.obj" };
+	static constexpr const char* const relativePath{ "\\Models\\Plane\\source\\PlaneClosedChute.obj" };
 	static constexpr const float baseStepX{ 0.0f };
 	static constexpr const float baseStepY{ 0.02f };
 	static constexpr const float baseStepZ{ -0.05f };
