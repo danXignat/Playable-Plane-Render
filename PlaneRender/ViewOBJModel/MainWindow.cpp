@@ -8,6 +8,7 @@ MainWindow::MainWindow() :
 	lightingWithTextureShader{ (currentPath + "\\Shaders\\PhongLightWithTexture.vs").c_str(), (currentPath + "\\Shaders\\PhongLightWithTexture.fs").c_str() },
 	lampShader{ (currentPath + "\\Shaders\\Lamp.vs").c_str(), (currentPath + "\\Shaders\\Lamp.fs").c_str() }
 {
+	_initIcon();
 	_initBuffer();
 }
 
@@ -90,6 +91,13 @@ void MainWindow::_deallocate() {
 	glDeleteVertexArrays(1, &lightVAO);
 	glDeleteBuffers(1, &VBO);
 	glfwTerminate();
+}
+
+void MainWindow::_initIcon() {
+	GLFWimage images[1];
+	images[0].pixels = stbi_load( (currentPath + ICON_PATH).c_str(), &images[0].width, &images[0].height, 0, 4); //rgba channels 
+	glfwSetWindowIcon(window, 1, images);
+	stbi_image_free(images[0].pixels);
 }
 
 std::string MainWindow::_initCurrPath() {

@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <stb_image.h>
 
 #include "Camera.h"
 #include "Includes.h"
@@ -34,9 +35,10 @@ private:
 	MainWindow();
 
 	GLFWwindow* _initWindow();
-	void _initBuffer();
 	std::string _initCurrPath();
+	void _initBuffer();
 	void _deallocate();
+	void _initIcon();
 
 public:
 	double deltaTime = 0.0f;

@@ -4,6 +4,7 @@
 constexpr const unsigned int SCR_WIDTH{ 1366 };
 constexpr const unsigned int SCR_HEIGHT{ 760 };
 constexpr const char* const WINDOW_LABEL{ "Plane render " };
+const std::string ICON_PATH{ "\\Pictures\\icon.png" };
 
 constexpr const float VERTICES[] = {
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
