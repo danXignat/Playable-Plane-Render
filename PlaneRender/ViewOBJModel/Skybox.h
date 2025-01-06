@@ -2,14 +2,15 @@
 
 #include <vector>
 #include <string>
-//#include <glad/glad.h>
+#include <algorithm>
 #include "Shader.h"
+#include "settings.h"
 
 class Skybox {
 public:
     unsigned int VAO, VBO, textureID;
 
-    Skybox(const std::vector<std::string>& faces);
+    Skybox(const std::string& path);
     void Draw(const Shader& shader);
 
 private:
