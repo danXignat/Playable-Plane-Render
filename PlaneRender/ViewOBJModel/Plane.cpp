@@ -14,7 +14,7 @@ Plane::Plane(const std::string& path) :
 	planeObjModel{ path + relativePath , false },
 	planeModel{ glm::scale(glm::mat4(1.0), glm::vec3(1.0f)) }
 {
-	planeModel = glm::translate(planeModel, glm::vec3(0.0f, 25.0f, 0.0f));
+	planeModel = glm::translate(planeModel, glm::vec3(110.0f, 25.0f, 0.0f));
 	planeModel = glm::translate(planeModel, planeMovement);
 	planeModel = glm::rotate(planeModel, glm::radians(-90.0f), glm::vec3(0, 1, 0));
 	planeModel = glm::rotate(planeModel, glm::radians(tiltDeg), glm::vec3(1, 0, 0));
