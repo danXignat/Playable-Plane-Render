@@ -35,20 +35,21 @@ double lastFrame = 0.0f;
 // plane movements
 
 glm::vec3 planeMovement{ 0.0f, 0.0f, 0.0f };
-float rotationDeg = 90.0f;
+float rotationDeg = 0.0f;
 float tiltDeg = 0.0f;
 const float baseStepX = 0.0f;
-const float baseStepY = 0.05f;
-const float baseStepZ = 0.05f;
+const float baseStepY = 0.02f;
+const float baseStepZ = -0.05f;
 float direct = glm::sqrt(glm::pow(baseStepX, 2) + glm::pow(baseStepZ, 2));
 float stepX = baseStepX;
 float stepY = baseStepY;
 float stepZ = baseStepZ;
+float acceleration = 0.0f;
 
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	std::cout << "X: " << planeMovement[0] << "|  Y: " << planeMovement[1] << "|  Z: " << planeMovement[2] << "\n";
+	std::cout << "Plane: X: " << planeMovement[0] << "|  Y: " << planeMovement[1] << "|  Z: " << planeMovement[2] << "\n";
 
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
@@ -71,52 +72,47 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		glfwGetWindowSize(window, &width, &height);
 		pCamera->Reset(width, height);
 	}
+
+	glm::vec3 camerapos = pCamera->GetPosition();
+
+	std::cout << "Camera X: " << camerapos[0] << "|  Y: " << camerapos[1] << "|  Z: " << camerapos[2] << "\n";
+
 }
+
 void processInput(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		//planeMovement[0] += step;
-		//pCamera->Set(planeMovement);
-		rotationDeg += 0.1f;
-		if (rotationDeg == 360.0f)
-			rotationDeg = 0.0f;
-		if (tiltDeg < 80.0f);
-			tiltDeg += 0.1f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
 		
-		//rotate left
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		//planeMovement[0] -= step;
-		rotationDeg -= 0.1f;
-		if (rotationDeg == 0.0f)
-			rotationDeg = 360.0f;
-		if (tiltDeg > -80.0f);
-			tiltDeg -= 0.1f;
-		//rotate right
+		
+	}
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+		
 	}
 
-	stepX = glm::sin(glm::radians(rotationDeg)) * direct;
-	stepZ = glm::cos(glm::radians(rotationDeg)) * direct;
 
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
-		planeMovement[1] += stepY;
-		//ascend
+		
 	}
 	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
 	{
-		planeMovement[1] -= stepY;
-		//descend
+		
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		planeMovement[0] += stepX;
-		planeMovement[2] += stepZ;
-		//move forth
+		acceleration += 0.01f;
+	}
+	else {
+		acceleration -= 0.005f;
+		if(acceleration < 0)
+			acceleration = 0;
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		planeMovement[0] -= stepX;
-		planeMovement[2] -= stepZ;
-		//move backward
+		
 	}
+	planeMovement[2] += baseStepZ * acceleration;
 }
 
 int main()
@@ -226,8 +222,8 @@ int main()
 
 
 	
-	glm::vec3 lightPos(0.0f, 4.0f, 0.0f);
-	glm::vec3 cubePos(0.0f, 5.0f, 1.0f);
+	glm::vec3 lightPos(0.0f, 10.0f, 0.0f);
+	glm::vec3 cubePos(0.0f, 11.0f, 1.0f);
 
 	wchar_t buffer[MAX_PATH];
 	GetCurrentDirectoryW(MAX_PATH, buffer);
@@ -255,11 +251,11 @@ int main()
 	std::string planeObjFileName = (currentPath + "\\Models\\Plane\\source\\sr71.obj");
 	Model planeObjModel(planeObjFileName, false);
 	
-	std::string runawayObjFileName = (currentPath + "\\Models\\Runaway\\source\\Runway\\runaway1.obj");
+	std::string runawayObjFileName = (currentPath + "\\Models\\Runway2\\ImageToStl.com_aerodrome.obj");
 	Model runawayObjModel(runawayObjFileName, false);
 
-	std::string pistaObjFileName = (currentPath + "\\Models\\pista\\pista.obj");
-	Model pistaObjModel(pistaObjFileName, false);
+	std::string airPortObjFileName = (currentPath + "\\Models\\Airportnew\\ImageToStl.com_airport.obj");
+	Model airPortObjModel(airPortObjFileName, false);
 	
 	Skybox skybox(faces);
 	Shader skyboxShader((currentPath+"\\Shaders\\Skybox.vs").c_str(), (currentPath+"\\Shaders\\Skybox.fs").c_str());
@@ -291,21 +287,19 @@ int main()
 
 		//pCamera->Set(cameraOffsetRotation);
 		
-		glm::mat4 planeModel = glm::scale(glm::mat4(1.0), glm::vec3(0.1f));
-		//planeModel = glm::rotate(planeModel, glm::radians(90), glm::vec3(0.0f, 1.0f, 0.0f);
+		glm::mat4 planeModel = glm::scale(glm::mat4(1.0), glm::vec3(1.0f));
+		planeModel = glm::translate(planeModel, glm::vec3(0.0f, 25.0f, 0.0f));
 		planeModel = glm::translate(planeModel, planeMovement);
-		planeModel = glm::rotate(planeModel, glm::radians(90.0f), glm::vec3(0.0f, 0.1f, 0.0f));
-		//planeModel = glm::rotate(planeModel, glm::radians(tiltDeg), glm::vec3(0, 0, 1));
-		planeModel = glm::rotate(planeModel, glm::radians(rotationDeg), glm::vec3(0, 1, 0));
+		planeModel = glm::rotate(planeModel, glm::radians(-90.0f), glm::vec3(0, 1, 0));
+		planeModel = glm::rotate(planeModel, glm::radians(tiltDeg), glm::vec3(1, 0, 0));
 		DrawModel(lightingWithTextureShader, planeModel, planeObjModel);
 
+		glm::mat4 airportModel = glm::scale(glm::mat4(1.0), glm::vec3(0.5f));
+		airportModel = glm::rotate(airportModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
+		DrawModel(lightingWithTextureShader, airportModel, airPortObjModel);
 
-		glm::mat4 pistaModel = glm::scale(glm::mat4(1.0), glm::vec3(0.001f));
-		pistaModel = glm::translate(pistaModel, glm::vec3(0.0f, 0.0f, -500.0f));
-		DrawModel(lightingWithTextureShader, pistaModel, pistaObjModel);
-
-		glm::mat4 runawayModel = glm::scale(glm::mat4(1.0), glm::vec3(0.001f));
-		runawayModel = glm::translate(runawayModel, glm::vec3(0.0f, -900.0f, -6000.0f));
+		glm::mat4 runawayModel = glm::scale(glm::mat4(1.0), glm::vec3(0.2f));
+		//runawayModel = glm::translate(runawayModel, glm::vec3(0.0f, -900.0f, -6000.0f));
 		DrawModel(lightingWithTextureShader, runawayModel, runawayObjModel);
 
 		// also draw the lamp object

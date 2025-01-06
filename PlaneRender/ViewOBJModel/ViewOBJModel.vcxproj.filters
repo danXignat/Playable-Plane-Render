@@ -39,9 +39,36 @@
     <ClCompile Include="Skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MovingPlane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="..\Shaders\Lamp.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\Lamp.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\PhongLight.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\PhongLight.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\PhongLightWithTexture.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\PhongLightWithTexture.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\Skybox.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\Skybox.vs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mesh.h">
@@ -75,6 +102,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MovingPlane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

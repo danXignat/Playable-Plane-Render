@@ -25,7 +25,7 @@ private:
 	glm::vec3 startPosition;
 
 protected:
-	const float cameraSpeedFactor = 250.0f;
+	const float cameraSpeedFactor = 750.0f;
 	const float mouseSensitivity = 0.1f;
 
 	// Perspective properties
