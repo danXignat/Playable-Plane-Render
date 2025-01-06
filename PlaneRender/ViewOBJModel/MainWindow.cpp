@@ -23,15 +23,17 @@ void MainWindow::run() {
 	glm::vec3 cubePos(0.0f, 11.0f, 1.0f);
 	Plane plane{ currentPath };
 
-	std::string runawayObjFileName = (currentPath + "\\Models\\Runway2\\ImageToStl.com_aerodrome.obj");
-	Model runawayObjModel(runawayObjFileName, false);
+	std::string mountain1FileName = (currentPath + "\\Models\\Mountain1\\source\\mountain1.obj");
+	Model mountain1ObjModel{ mountain1FileName, false };
 
 	std::string airPortObjFileName = (currentPath + "\\Models\\Airportnew\\ImageToStl.com_airport.obj");
-	Model airPortObjModel(airPortObjFileName, false);
+	Model airPortObjModel{ airPortObjFileName, false };
+
+	std::string towerObjFileName = (currentPath + "\\Models\\Tower\\tower.obj");
+	Model towerObjModel{ towerObjFileName, false };
 
 	Skybox skybox(currentPath);
 	Shader skyboxShader((currentPath + "\\Shaders\\Skybox.vs").c_str(), (currentPath + "\\Shaders\\Skybox.fs").c_str());
-
 
 	while (!glfwWindowShouldClose(window)) {
 		utils::processInput(window);
@@ -52,10 +54,18 @@ void MainWindow::run() {
 		utils::LoadLightningShader(*pCamera, lightingShader, lightPos);
 		utils::LoadLighningTextureShaders(*pCamera, lightingWithTextureShader, lightPos);
 
-
 		glm::mat4 airportModel = glm::scale(glm::mat4(1.0), glm::vec3(0.5f));
 		airportModel = glm::rotate(airportModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
 		utils::DrawModel(lightingWithTextureShader, airportModel, airPortObjModel);
+
+		/*glm::mat4 towerModel = glm::scale(glm::mat4(1.0), glm::vec3(0.5f));
+		towerModel = glm::rotate(towerModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
+		utils::DrawModel(lightingWithTextureShader, towerModel, towerObjModel);*/
+
+		glm::mat4 mountain1Model = glm::scale(glm::mat4(1.0), glm::vec3(3.f));
+		mountain1Model = glm::rotate(mountain1Model, glm::radians(180.0f), glm::vec3(0, 1, 0));
+		mountain1Model = glm::translate(mountain1Model, glm::vec3(-600.0f, -20.0f, 550.0f));
+		utils::DrawModel(lightingWithTextureShader, mountain1Model, mountain1ObjModel);
 
 		//glm::mat4 runawayModel = glm::scale(glm::mat4(1.0), glm::vec3(0.2f));
 		//runawayModel = glm::translate(runawayModel, glm::vec3(0.0f, -900.0f, -6000.0f));

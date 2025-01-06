@@ -76,7 +76,7 @@ const glm::mat4 Camera::GetProjectionMatrix() const
 	glm::mat4 Proj = glm::mat4(1);
 	if (isPerspective) {
 		float aspectRatio = ((float)(width)) / height;
-		Proj = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 3000.0f);
+		Proj = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 10000.0f);
 	}
 	else {
 		float scaleFactor = 2000.f;

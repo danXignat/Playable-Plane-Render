@@ -81,12 +81,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\_external\GLEW;..\_external\glfw;..\_external\glm;..\_external\stb;$(IncludePath)</IncludePath>
+    <IncludePath>..\_external\GLEW;..\_external\glfw;..\_external\glm;..\_external\stb;$(IncludePath);..\_external\</IncludePath>
     <LibraryPath>..\_external\GLFW\x64;..\_external\GLEW\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\Projects\ViewOBJModel\_external\GLEW;..\_external\glfw;..\_external\glm;..\_external\stb;$(IncludePath)</IncludePath>
+    <IncludePath>D:\Projects\ViewOBJModel\_external\GLEW;..\_external\glfw;..\_external\glm;..\_external\stb;$(IncludePath);..\_external\</IncludePath>
     <LibraryPath>..\_external\GLFW\x64;..\_external\GLEW\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

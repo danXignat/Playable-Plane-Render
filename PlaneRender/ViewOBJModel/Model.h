@@ -21,6 +21,7 @@ public:
     // constructor, expects a filepath to a 3D model.
     Model(string const& path, bool bSmoothNormals, bool gamma = false);
 
+    unsigned int loadEmbeddedTexture(aiTexture* texture);
     // draws the model, and thus all its meshes
     virtual void Draw(Shader& shader);
 
