@@ -35,7 +35,7 @@ void MainWindow::run() {
 	Model towerObjModel{ towerObjFileName, false };
 
 	Sun sun(100.0f, 50.0f); // Orbit radius 100, elevation range 50
-	sun.initialize("path/to/sun_model.obj");
+	sun.initialize(currentPath+"\\Models\\Sun\\sun.obj");
 
 	while (!glfwWindowShouldClose(window)) {
 		_processInput();
