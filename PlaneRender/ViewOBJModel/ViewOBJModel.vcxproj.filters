@@ -45,6 +45,9 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sun.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -70,6 +73,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="..\Shaders\Skybox.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\Sun.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\Sun.vs">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -117,6 +126,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sun.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

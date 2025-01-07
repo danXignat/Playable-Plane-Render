@@ -158,6 +158,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Sun.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Shaders\Lamp.fs" />
@@ -168,6 +169,8 @@
     <None Include="..\Shaders\PhongLightWithTexture.vs" />
     <None Include="..\Shaders\Skybox.fs" />
     <None Include="..\Shaders\Skybox.vs" />
+    <None Include="..\Shaders\Sun.fs" />
+    <None Include="..\Shaders\Sun.vs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -183,6 +186,7 @@
     <ClInclude Include="settings.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Skybox.h" />
+    <ClInclude Include="Sun.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="Vertex.h" />
