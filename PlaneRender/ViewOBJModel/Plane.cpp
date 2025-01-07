@@ -134,5 +134,5 @@ void Plane::render() {
 	planeRenderModel = glm::rotate(planeRenderModel, turnDeg, glm::vec3{ 1, 0, 0 });
 	
 
-	utils::DrawModel(MainWindow::instance().lightingWithTextureShader, planeRenderModel, planeObjModel);
+	utils::DrawModel(MainWindow::instance().sunShader, planeRenderModel, planeObjModel);
 }

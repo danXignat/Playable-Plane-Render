@@ -32,14 +32,11 @@ void MainWindow::run() {
 	std::string towerObjFileName = (currentPath + "\\Models\\Tower\\tower.obj");
 	Model towerObjModel{ towerObjFileName, false };
 
-	Sun sun(100.0f, 50.0f); // Orbit radius 100, elevation range 50
-	sun.initialize("path/to/sun_model.obj");
-
 	Skybox skybox(currentPath);
 	Shader skyboxShader((currentPath + "\\Shaders\\Skybox.vs").c_str(), (currentPath + "\\Shaders\\Skybox.fs").c_str());
 
 	Sun sun(100.0f, 50.0f); // Orbit radius 100, elevation range 50
-	sun.initialize("path/to/sun_model.obj");
+	sun.initialize(currentPath+"\\Models\\Sun\\sun.obj");
 	glm::vec3 cameraOffset{ 0.0f, 10.0f, 35.0f };
 
 	while (!glfwWindowShouldClose(window)) {
@@ -52,16 +49,17 @@ void MainWindow::run() {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//lightPos.x = 2.5 * cos(glfwGetTime());
-		//lightPos.z = 2.5 * sin(glfwGetTime());
+		lightPos.x = 2.5 * cos(glfwGetTime());
+		lightPos.z = 2.5 * sin(glfwGetTime());
 
-		//cubePos.x = 10 * sin(glfwGetTime());
-		//cubePos.z = 10 * cos(glfwGetTime());
+		cubePos.x = 10 * sin(glfwGetTime());
+		cubePos.z = 10 * cos(glfwGetTime());
 
-	//	utils::LoadLightningShader(*pCamera, lightingShader, lightPos);
-		//utils::LoadLighningTextureShaders(*pCamera, lightingWithTextureShader, lightPos);
+		utils::LoadLightningShader(*pCamera, lightingShader, lightPos);
+		utils::LoadLighningTextureShaders(*pCamera, sunShader, lightPos);
 
 		float currentTime = glfwGetTime(); // Get current time
+
 		// Render the sun
 		sun.render(sunShader, currentTime,pCamera->GetPosition());
 
