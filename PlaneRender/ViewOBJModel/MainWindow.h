@@ -40,6 +40,7 @@ private:
 	void _initBuffer();
 	void _deallocate();
 	void _initIcon();
+	void _processInput();
 
 public:
 	double deltaTime = 0.0f;

@@ -3,7 +3,7 @@
 MainWindow::MainWindow() :
 	window{ _initWindow() },
 	pCamera{ std::make_unique<Camera>(SCR_WIDTH, SCR_HEIGHT, glm::vec3(110.0f, 30.0f, 35.0f)) },
-	currentPath{_initCurrPath()},
+	currentPath{ _initCurrPath() },
 	lightingShader{ (currentPath + "\\Shaders\\PhongLight.vs").c_str(), (currentPath + "\\Shaders\\PhongLight.fs").c_str() },
 	sunShader{ (currentPath + "\\Shaders\\PhongLightWithTexture.vs").c_str(), (currentPath + "\\Shaders\\PhongLightWithTexture.fs").c_str() },
 	lampShader{ (currentPath + "\\Shaders\\Lamp.vs").c_str(), (currentPath + "\\Shaders\\Lamp.fs").c_str() }
@@ -21,7 +21,9 @@ MainWindow& MainWindow::instance() {
 void MainWindow::run() {
 	glm::vec3 lightPos(0.0f, 10.0f, 0.0f);
 	glm::vec3 cubePos(0.0f, 11.0f, 1.0f);
-	Plane plane{ currentPath };
+
+	Plane plane{ currentPath, *pCamera };
+	Skybox skybox{ currentPath, *pCamera };
 
 	std::string mountain1FileName = (currentPath + "\\Models\\Mountain1\\source\\mountain1.obj");
 	Model mountain1ObjModel{ mountain1FileName, false };
@@ -32,14 +34,11 @@ void MainWindow::run() {
 	std::string towerObjFileName = (currentPath + "\\Models\\Tower\\tower.obj");
 	Model towerObjModel{ towerObjFileName, false };
 
-	Skybox skybox(currentPath);
-	Shader skyboxShader((currentPath + "\\Shaders\\Skybox.vs").c_str(), (currentPath + "\\Shaders\\Skybox.fs").c_str());
-
 	Sun sun(100.0f, 50.0f); // Orbit radius 100, elevation range 50
-	sun.initialize(currentPath+"\\Models\\Sun\\sun.obj");
-	glm::vec3 cameraOffset{ 0.0f, 10.0f, 35.0f };
+	sun.initialize("path/to/sun_model.obj");
 
 	while (!glfwWindowShouldClose(window)) {
+		_processInput();
 		plane.processPlaneInput(window);
 
 		double currentFrame = glfwGetTime();
@@ -49,19 +48,18 @@ void MainWindow::run() {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		lightPos.x = 2.5 * cos(glfwGetTime());
-		lightPos.z = 2.5 * sin(glfwGetTime());
+		//lightPos.x = 2.5 * cos(glfwGetTime());
+		//lightPos.z = 2.5 * sin(glfwGetTime());
 
-		cubePos.x = 10 * sin(glfwGetTime());
-		cubePos.z = 10 * cos(glfwGetTime());
+		//cubePos.x = 10 * sin(glfwGetTime());
+		//cubePos.z = 10 * cos(glfwGetTime());
 
 		utils::LoadLightningShader(*pCamera, lightingShader, lightPos);
 		utils::LoadLighningTextureShaders(*pCamera, sunShader, lightPos);
 
 		float currentTime = glfwGetTime(); // Get current time
-
 		// Render the sun
-		sun.render(sunShader, currentTime,pCamera->GetPosition());
+		sun.render(sunShader, currentTime, pCamera->GetPosition());
 
 		glm::mat4 airportModel = glm::scale(glm::mat4(1.0), glm::vec3(0.5f));
 		airportModel = glm::rotate(airportModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
@@ -76,18 +74,11 @@ void MainWindow::run() {
 		mountain1Model = glm::translate(mountain1Model, glm::vec3(-600.0f, -20.0f, 550.0f));
 		utils::DrawModel(sunShader, mountain1Model, mountain1ObjModel);
 
-		//glm::mat4 runawayModel = glm::scale(glm::mat4(1.0), glm::vec3(0.2f));
-		//runawayModel = glm::translate(runawayModel, glm::vec3(0.0f, -900.0f, -6000.0f));
-		//utils::DrawModel(lightingWithTextureShader, runawayModel, runawayObjModel);
 		plane.render();
-
-		// Apply the plane's rotation to the offset
-		glm::vec3 rotatedOffset = glm::vec3(plane.getRotation() * glm::vec4(cameraOffset, 1.0f));
-
-		// Compute the camera's position and orientation
-		glm::vec3 cameraPosition = plane.getTranslation() + rotatedOffset;
-		pCamera->SetPosition(cameraPosition);
-		pCamera->LookAt(plane.getTranslation());
+		skybox.render();
+		/*glm::mat4 towerModel = glm::scale(glm::mat4(1.0), glm::vec3(0.5f));
+		towerModel = glm::rotate(towerModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
+		utils::DrawModel(lightingWithTextureShader, towerModel, towerObjModel);*/
 
 		// also draw the lamp object
 		//lampShader.use();
@@ -96,11 +87,6 @@ void MainWindow::run() {
 		//glm::mat4 lightModel = glm::translate(glm::mat4(1.0), lightPos);
 		//lightModel = glm::scale(lightModel, glm::vec3(0.05f)); // a smaller cube
 		//lampShader.setMat4("model", lightModel);
-
-		skyboxShader.use();
-		skyboxShader.setMat4("view", glm::mat4(glm::mat3(pCamera->GetViewMatrix())));
-		skyboxShader.setMat4("projection", pCamera->GetProjectionMatrix());
-		skybox.Draw(skyboxShader);
 
 		glBindVertexArray(lightVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -113,6 +99,15 @@ void MainWindow::run() {
 	_deallocate();
 }
 
+void MainWindow::_processInput() {
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
+		pCamera->state = CameraStates::SPECTATOR;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
+		pCamera->state = CameraStates::BEHIND_PLANE;
+	}
+}
+
 void MainWindow::_deallocate() {
 	glDeleteVertexArrays(1, &cubeVAO);
 	glDeleteVertexArrays(1, &lightVAO);
@@ -122,7 +117,7 @@ void MainWindow::_deallocate() {
 
 void MainWindow::_initIcon() {
 	GLFWimage images[1];
-	images[0].pixels = stbi_load( (currentPath + ICON_PATH).c_str(), &images[0].width, &images[0].height, 0, 4); //rgba channels 
+	images[0].pixels = stbi_load((currentPath + ICON_PATH).c_str(), &images[0].width, &images[0].height, 0, 4); //rgba channels 
 	glfwSetWindowIcon(window, 1, images);
 	stbi_image_free(images[0].pixels);
 }

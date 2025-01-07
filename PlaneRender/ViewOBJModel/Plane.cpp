@@ -1,16 +1,18 @@
 #include "Plane.h"
 #include "utils.h"
 
-Plane::Plane(const std::string& path) :
-	planeMovement	{ 0.0f, 0.0f, 0.0f },
-	rotationDeg		{ 0.0f },
-	tiltDeg			{ 0.0f },
-	turnDeg			{ 0.0f },
-	stepX			{ 0 },
-	stepY			{ 0 },
-	stepZ			{ 0 },
-	acceleration	{ 0.0f },
+Plane::Plane(const std::string& path, Camera& pCamera) :
+	planeMovement{ 0.0f, 0.0f, 0.0f },
+	rotationDeg{ 0.0f },
+	tiltDeg{ 0.0f },
+	turnDeg{ 0.0f },
+	stepX{ 0 },
+	stepY{ 0 },
+	stepZ{ 0 },
+	acceleration{ 0.0f },
 
+	pCamera{ pCamera },
+	cameraOffset{ 0.0f, 10.0f, 35.0f },
 	planeObjModel{ path + relativePath , false },
 	planeModel{ glm::scale(glm::mat4(1.0), glm::vec3(1.0f)) },
 	planeRenderModel{ glm::scale(glm::mat4(1.0), glm::vec3(1.0f)) }
@@ -22,7 +24,7 @@ Plane::Plane(const std::string& path) :
 	planeRenderModel = glm::translate(planeRenderModel, glm::vec3(110.0f, 25.0f, 0.0f));
 	planeRenderModel = glm::translate(planeRenderModel, planeMovement);
 	planeRenderModel = glm::rotate(planeRenderModel, glm::radians(-90.0f), glm::vec3(0, 1, 0));
-	
+
 	//planeModel = glm::rotate(planeModel, glm::radians(tiltDeg), glm::vec3(1, 0, 0));
 }
 
@@ -35,7 +37,7 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 		if (turnDeg < -80.0f)
 			turnDeg = 80.0f;
 	}
-	else if (!(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)){
+	else if (!(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)) {
 		turnDeg += 0.05f;
 		if (turnDeg > 0.0f)
 			turnDeg = 0.0f;
@@ -51,7 +53,7 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 		if (turnDeg > 80.0f)
 			turnDeg = 80.0f;
 	}
-	else if (!(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)){
+	else if (!(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)) {
 		turnDeg -= 0.05f;
 		if (turnDeg < 0.0f)
 			turnDeg = 0.0f;
@@ -96,7 +98,7 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 	}
 	else {
 		acceleration -= 0.005f;
-		if(acceleration < 0.0f)
+		if (acceleration < 0.0f)
 			acceleration = 0;
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
@@ -120,19 +122,31 @@ glm::vec3 Plane::getTranslation() const
 glm::mat4 Plane::getRotation()
 {
 	glm::mat4 planeRotation = glm::mat4(1.0f);
-	planeRotation = glm::rotate(planeRotation, glm::radians(tiltDeg), glm::vec3(0, 0, 1));    
-	planeRotation = glm::rotate(planeRotation, -rotationDeg, glm::vec3(0, 1, 0)); 
+	planeRotation = glm::rotate(planeRotation, glm::radians(tiltDeg), glm::vec3(0, 0, 1));
+	planeRotation = glm::rotate(planeRotation, -rotationDeg, glm::vec3(0, 1, 0));
 	return planeRotation;
 }
 
-void Plane::render() {
-	//glm::mat4 auxiliaryModel;
+void Plane::_updateCamera() {
+	glm::vec3 rotatedOffset = glm::vec3(this->getRotation() * glm::vec4(cameraOffset, 1.0f));
 
+	// Compute the camera's position and orientation
+	if (pCamera.state == CameraStates::BEHIND_PLANE) {
+		glm::vec3 cameraPosition = this->getTranslation() + rotatedOffset;
+		pCamera.SetPosition(cameraPosition);
+		pCamera.LookAt(this->getTranslation());
+	}
+}
+
+void Plane::render() {
+	_updateCamera();
+
+	//glm::mat4 auxiliaryModel;
 	planeRenderModel = glm::translate(planeModel, planeMovement);
 	planeRenderModel = glm::rotate(planeRenderModel, glm::radians(tiltDeg), glm::vec3{ 0, 0, 1 });
 	planeRenderModel = glm::rotate(planeRenderModel, -rotationDeg, glm::vec3{ 0, 1, 0 });
 	planeRenderModel = glm::rotate(planeRenderModel, turnDeg, glm::vec3{ 1, 0, 0 });
-	
+
 
 	utils::DrawModel(MainWindow::instance().sunShader, planeRenderModel, planeObjModel);
 }

@@ -1,7 +1,10 @@
 #include "Skybox.h"
 #include "stb_image.h"
 #include <iostream>
-Skybox::Skybox(const std::string& path) {
+Skybox::Skybox(const std::string& path, const Camera& pCamera) :
+    skyboxShader{ (path + "\\Shaders\\Skybox.vs").c_str(), (path + "\\Shaders\\Skybox.fs").c_str() },
+    pCamera{ pCamera } {
+
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
 
@@ -10,7 +13,7 @@ Skybox::Skybox(const std::string& path) {
     glBufferData(GL_ARRAY_BUFFER, sizeof(SKYBOX_VERTICES), &SKYBOX_VERTICES, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    
+
     std::vector<std::string> paths;
 
     std::transform(
@@ -22,9 +25,11 @@ Skybox::Skybox(const std::string& path) {
     textureID = loadCubemap(paths);
 }
 
-void Skybox::Draw(const Shader& shader) {
+void Skybox::render() {
     glDepthFunc(GL_LEQUAL); // Change depth function
-    shader.use();
+    skyboxShader.use();
+    skyboxShader.setMat4("view", glm::mat4(glm::mat3(pCamera.GetViewMatrix())));
+    skyboxShader.setMat4("projection", pCamera.GetProjectionMatrix());
     glBindVertexArray(VAO);
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
     glDrawArrays(GL_TRIANGLES, 0, 36);

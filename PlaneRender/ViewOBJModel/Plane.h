@@ -10,7 +10,7 @@ public:
 	static constexpr const float baseStepZ{ -0.05f };
 
 public:
-	Plane(const std::string&);
+	Plane(const std::string& path, Camera& pCamera);
 
 	void processPlaneInput(GLFWwindow* window);
 	glm::vec3 getTranslation() const;
@@ -18,6 +18,12 @@ public:
 	void render();
 
 private:
+	void _updateCamera();
+
+private:
+	Camera& pCamera;
+	glm::vec3 cameraOffset;
+
 	Model planeObjModel;
 	glm::mat4 planeModel;
 	glm::mat4 planeRenderModel;

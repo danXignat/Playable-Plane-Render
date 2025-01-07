@@ -2,6 +2,13 @@
 
 #include "Includes.h"
 
+enum class CameraStates {
+	SPECTATOR,
+	BEHIND_PLANE,
+	IN_PLANE
+};
+
+
 enum ECameraMovementType
 {
 	UNKNOWN,
@@ -15,6 +22,9 @@ enum ECameraMovementType
 
 class Camera
 {
+public:
+	CameraStates state;
+
 private:
 	// Default camera values
 	const float zNEAR = 0.1f;
