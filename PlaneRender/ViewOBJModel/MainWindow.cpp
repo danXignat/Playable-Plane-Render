@@ -5,7 +5,7 @@ MainWindow::MainWindow() :
 	pCamera{ std::make_unique<Camera>(SCR_WIDTH, SCR_HEIGHT, glm::vec3(110.0f, 30.0f, 35.0f)) },
 	currentPath{_initCurrPath()},
 	lightingShader{ (currentPath + "\\Shaders\\PhongLight.vs").c_str(), (currentPath + "\\Shaders\\PhongLight.fs").c_str() },
-	lightingWithTextureShader{ (currentPath + "\\Shaders\\PhongLightWithTexture.vs").c_str(), (currentPath + "\\Shaders\\PhongLightWithTexture.fs").c_str() },
+	sunShader{ (currentPath + "\\Shaders\\PhongLightWithTexture.vs").c_str(), (currentPath + "\\Shaders\\PhongLightWithTexture.fs").c_str() },
 	lampShader{ (currentPath + "\\Shaders\\Lamp.vs").c_str(), (currentPath + "\\Shaders\\Lamp.fs").c_str() }
 {
 	_initIcon();
@@ -32,9 +32,14 @@ void MainWindow::run() {
 	std::string towerObjFileName = (currentPath + "\\Models\\Tower\\tower.obj");
 	Model towerObjModel{ towerObjFileName, false };
 
+	Sun sun(100.0f, 50.0f); // Orbit radius 100, elevation range 50
+	sun.initialize("path/to/sun_model.obj");
+
 	Skybox skybox(currentPath);
 	Shader skyboxShader((currentPath + "\\Shaders\\Skybox.vs").c_str(), (currentPath + "\\Shaders\\Skybox.fs").c_str());
 
+	Sun sun(100.0f, 50.0f); // Orbit radius 100, elevation range 50
+	sun.initialize("path/to/sun_model.obj");
 	glm::vec3 cameraOffset{ 0.0f, 10.0f, 35.0f };
 
 	while (!glfwWindowShouldClose(window)) {
@@ -47,27 +52,31 @@ void MainWindow::run() {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		lightPos.x = 2.5 * cos(glfwGetTime());
-		lightPos.z = 2.5 * sin(glfwGetTime());
+		//lightPos.x = 2.5 * cos(glfwGetTime());
+		//lightPos.z = 2.5 * sin(glfwGetTime());
 
-		cubePos.x = 10 * sin(glfwGetTime());
-		cubePos.z = 10 * cos(glfwGetTime());
+		//cubePos.x = 10 * sin(glfwGetTime());
+		//cubePos.z = 10 * cos(glfwGetTime());
 
-		utils::LoadLightningShader(*pCamera, lightingShader, lightPos);
-		utils::LoadLighningTextureShaders(*pCamera, lightingWithTextureShader, lightPos);
+	//	utils::LoadLightningShader(*pCamera, lightingShader, lightPos);
+		//utils::LoadLighningTextureShaders(*pCamera, lightingWithTextureShader, lightPos);
+
+		float currentTime = glfwGetTime(); // Get current time
+		// Render the sun
+		sun.render(sunShader, currentTime,pCamera->GetPosition());
 
 		glm::mat4 airportModel = glm::scale(glm::mat4(1.0), glm::vec3(0.5f));
 		airportModel = glm::rotate(airportModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
-		utils::DrawModel(lightingWithTextureShader, airportModel, airPortObjModel);
+		utils::DrawModel(sunShader, airportModel, airPortObjModel);
 
 		glm::mat4 towerModel = glm::scale(glm::mat4(1.0), glm::vec3(0.5f));
 		towerModel = glm::rotate(towerModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
-		utils::DrawModel(lightingWithTextureShader, towerModel, towerObjModel);
+		utils::DrawModel(sunShader, towerModel, towerObjModel);
 
 		glm::mat4 mountain1Model = glm::scale(glm::mat4(1.0), glm::vec3(3.f));
 		mountain1Model = glm::rotate(mountain1Model, glm::radians(180.0f), glm::vec3(0, 1, 0));
 		mountain1Model = glm::translate(mountain1Model, glm::vec3(-600.0f, -20.0f, 550.0f));
-		utils::DrawModel(lightingWithTextureShader, mountain1Model, mountain1ObjModel);
+		utils::DrawModel(sunShader, mountain1Model, mountain1ObjModel);
 
 		//glm::mat4 runawayModel = glm::scale(glm::mat4(1.0), glm::vec3(0.2f));
 		//runawayModel = glm::translate(runawayModel, glm::vec3(0.0f, -900.0f, -6000.0f));

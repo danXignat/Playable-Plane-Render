@@ -1,7 +1,8 @@
 #pragma once
 
-#include <glm.hpp>
-#include <gtc/matrix_transform.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/constants.hpp>
 #include "Model.h"
 
 class Sun {
@@ -9,17 +10,14 @@ public:
     // Constructor
     Sun(float radius = 100.0f, float elevationRange = 50.0f);
 
+    // Destructor
+    ~Sun();
+
     // Initializes the sun with a 3D model and texture
     void initialize(const std::string& modelPath);
 
-    // Updates the sun's position based on time
-    void updatePosition(float time);
-
-    // Draws the sun using the provided shader
-    void draw(Shader& shader);
-
-    // Retrieves the sun's directional light vector (normalized)
-    glm::vec3 getLightDirection() const;
+    // Renders the sun, updates its position based on time, and sets light direction in the shader
+    void render(Shader& shader, float currentTime,glm::vec3 cameraPosition);
 
     // Sets the orbit radius of the sun
     void setRadius(float radius);
