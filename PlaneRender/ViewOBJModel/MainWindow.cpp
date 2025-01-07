@@ -34,7 +34,7 @@ void MainWindow::run() {
 	std::string towerObjFileName = (currentPath + "\\Models\\Tower\\tower.obj");
 	Model towerObjModel{ towerObjFileName, false };
 
-	Sun sun(100.0f, 50.0f); // Orbit radius 100, elevation range 50
+	Sun sun(1600.0f, 1000.0f); // Orbit radius 100, elevation range 50
 	sun.initialize(currentPath+"\\Models\\Sun\\sun.obj");
 
 	while (!glfwWindowShouldClose(window)) {
@@ -57,7 +57,7 @@ void MainWindow::run() {
 		utils::LoadLightningShader(*pCamera, lightingShader, lightPos);
 		utils::LoadLighningTextureShaders(*pCamera, sunShader, lightPos);
 
-		float currentTime = glfwGetTime(); // Get current time
+		float currentTime = sun.getRealTimeInHours(); // Get current time
 		// Render the sun
 		sun.render(sunShader, currentTime, pCamera->GetPosition());
 
@@ -65,9 +65,9 @@ void MainWindow::run() {
 		airportModel = glm::rotate(airportModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
 		utils::DrawModel(sunShader, airportModel, airPortObjModel);
 
-		glm::mat4 towerModel = glm::scale(glm::mat4(1.0), glm::vec3(0.5f));
-		towerModel = glm::rotate(towerModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
-		utils::DrawModel(sunShader, towerModel, towerObjModel);
+		//glm::mat4 towerModel = glm::scale(glm::mat4(1.0), glm::vec3(0.5f));
+		//towerModel = glm::rotate(towerModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
+		//utils::DrawModel(sunShader, towerModel, towerObjModel);
 
 		glm::mat4 mountain1Model = glm::scale(glm::mat4(1.0), glm::vec3(3.f));
 		mountain1Model = glm::rotate(mountain1Model, glm::radians(180.0f), glm::vec3(0, 1, 0));
