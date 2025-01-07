@@ -34,37 +34,5 @@ namespace utils {
 	// glfw: whenever the window size changed (by OS or user resize) this callback function executes
 	// ---------------------------------------------------------------------------------------------
 
-	inline void processInput(GLFWwindow* window) {
-		/*if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		}
-		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
 
-		}
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-
-		}
-		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-
-		}
-		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		{
-
-		}
-		if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
-		{
-
-		}
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			acceleration += 0.01f;
-		}
-		else {
-			acceleration -= 0.005f;
-			if(acceleration < 0)
-				acceleration = 0;
-		}
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-
-		}
-		planeMovement[2] += baseStepZ * acceleration;*/
-	}
 }

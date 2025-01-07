@@ -6,6 +6,12 @@ Camera::Camera(const int width, const int height, const glm::vec3& position)
 	Set(width, height, position);
 }
 
+Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp)
+	: position{startPosition}, worldUp{ startUp }, forward{ glm::vec3(0.0f, 0.0f, -1.0f)} {
+	UpdateCameraVectors();
+}
+
+
 void Camera::Set(const int width, const int height, const glm::vec3& position)
 {
 	this->isPerspective = true;
@@ -69,6 +75,18 @@ const glm::mat4 Camera::GetViewMatrix() const
 const glm::vec3 Camera::GetPosition() const
 {
 	return position;
+}
+
+void Camera::SetPosition(const glm::vec3& position)
+{
+	this->position = position;
+}
+
+void Camera::LookAt(const glm::vec3& target)
+{
+	this->forward = glm::normalize(target - position);
+
+	UpdateCameraVectors();
 }
 
 const glm::mat4 Camera::GetProjectionMatrix() const
@@ -166,6 +184,12 @@ void Camera::ProcessMouseMovement(float xOffset, float yOffset, bool constrainPi
 }
 
 void Camera::UpdateCameraVectors()
+{
+	right = glm::normalize(glm::cross(forward, worldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+	up = glm::normalize(glm::cross(right, forward));
+}
+
+void Camera::UpdateCameraLockVectors()
 {
 	// Calculate the new forward vector
 	this->forward.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));

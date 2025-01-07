@@ -35,8 +35,10 @@ void MainWindow::run() {
 	Skybox skybox(currentPath);
 	Shader skyboxShader((currentPath + "\\Shaders\\Skybox.vs").c_str(), (currentPath + "\\Shaders\\Skybox.fs").c_str());
 
+	glm::vec3 cameraOffset{ 0.0f, 10.0f, 35.0f };
+
 	while (!glfwWindowShouldClose(window)) {
-		utils::processInput(window);
+		plane.processPlaneInput(window);
 
 		double currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
@@ -58,9 +60,9 @@ void MainWindow::run() {
 		airportModel = glm::rotate(airportModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
 		utils::DrawModel(lightingWithTextureShader, airportModel, airPortObjModel);
 
-		/*glm::mat4 towerModel = glm::scale(glm::mat4(1.0), glm::vec3(0.5f));
+		glm::mat4 towerModel = glm::scale(glm::mat4(1.0), glm::vec3(0.5f));
 		towerModel = glm::rotate(towerModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
-		utils::DrawModel(lightingWithTextureShader, towerModel, towerObjModel);*/
+		utils::DrawModel(lightingWithTextureShader, towerModel, towerObjModel);
 
 		glm::mat4 mountain1Model = glm::scale(glm::mat4(1.0), glm::vec3(3.f));
 		mountain1Model = glm::rotate(mountain1Model, glm::radians(180.0f), glm::vec3(0, 1, 0));
@@ -71,6 +73,14 @@ void MainWindow::run() {
 		//runawayModel = glm::translate(runawayModel, glm::vec3(0.0f, -900.0f, -6000.0f));
 		//utils::DrawModel(lightingWithTextureShader, runawayModel, runawayObjModel);
 		plane.render();
+
+		// Apply the plane's rotation to the offset
+		glm::vec3 rotatedOffset = glm::vec3(plane.getRotation() * glm::vec4(cameraOffset, 1.0f));
+
+		// Compute the camera's position and orientation
+		glm::vec3 cameraPosition = plane.getTranslation() + rotatedOffset;
+		pCamera->SetPosition(cameraPosition);
+		pCamera->LookAt(plane.getTranslation());
 
 		// also draw the lamp object
 		//lampShader.use();

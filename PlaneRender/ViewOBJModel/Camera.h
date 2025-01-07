@@ -52,6 +52,8 @@ protected:
 public:
 	Camera(const int width, const int height, const glm::vec3& position);
 
+	Camera(glm::vec3 startPosition, glm::vec3 startUp);
+
 	void Set(const int width, const int height, const glm::vec3& position);
 
 	void Set(const glm::vec3& position);
@@ -64,6 +66,10 @@ public:
 
 	const glm::vec3 GetPosition() const;
 
+	void SetPosition(const glm::vec3& position);
+
+	void LookAt(const glm::vec3& target);
+
 	const glm::mat4 GetProjectionMatrix() const;
 
 	void ProcessKeyboard(ECameraMovementType direction, float deltaTime);
@@ -75,6 +81,7 @@ public:
 private:
 	void ProcessMouseMovement(float xOffset, float yOffset, bool constrainPitch = true);
 
+	void UpdateCameraLockVectors();
 	void UpdateCameraVectors();
 
 };
