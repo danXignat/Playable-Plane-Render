@@ -1,10 +1,13 @@
 #include "MainWindow.h"
+#include "KDTree.h"
 
-int main()
-{
-	MainWindow& mainWindow = MainWindow::instance();
+#include "random"
 
-	mainWindow.run();
+int main() {
+    MainWindow& window = MainWindow::instance();
+
+    window.run();
+
+    return 0;
 }
-
 

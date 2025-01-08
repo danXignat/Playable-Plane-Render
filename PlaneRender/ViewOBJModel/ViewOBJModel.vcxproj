@@ -151,9 +151,11 @@
     <ClCompile Include="Callback.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="FlyingCube.cpp" />
+    <ClCompile Include="KDTree.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Mountain.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Skybox.cpp" />
@@ -178,9 +180,11 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="FlyingCube.h" />
     <ClInclude Include="Includes.h" />
+    <ClInclude Include="KDTree.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="Mountain.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="settings.h" />
@@ -190,6 +194,9 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="Vertex.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="C:\Users\ignat\Desktop\mountain blender\mountain_vertices.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

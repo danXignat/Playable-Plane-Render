@@ -13,6 +13,7 @@
 #include "Model.h"
 #include "Plane.h"
 #include "Sun.h"
+#include "Mountain.h"
 
 #pragma comment (lib, "glfw3dll.lib")
 #pragma comment (lib, "glew32.lib")

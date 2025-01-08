@@ -48,6 +48,12 @@
     <ClCompile Include="Sun.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Mountain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="KDTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -131,5 +137,16 @@
     <ClInclude Include="Sun.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Mountain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KDTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="C:\Users\ignat\Desktop\mountain blender\mountain_vertices.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

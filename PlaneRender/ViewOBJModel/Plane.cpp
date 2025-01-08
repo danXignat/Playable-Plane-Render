@@ -2,6 +2,14 @@
 #include "utils.h"
 
 Plane::Plane(const std::string& path, Camera& pCamera) :
+	planeObjModel{ path + "\\Models\\Plane\\source\\PlaneClosedChute.obj" , false },
+	pCamera{ pCamera },
+
+	tipPlaneOffset{ -16.359f, 0.027f, - 1.049f },
+	cameraOffset{ 0.0f, 10.0f, 35.0f },
+
+	planeModel{ glm::scale(glm::mat4(1.0), glm::vec3(1.0f)) },
+	planeRenderModel{ glm::scale(glm::mat4(1.0), glm::vec3(1.0f)) },
 	planeMovement{ 0.0f, 0.0f, 0.0f },
 	rotationDeg{ 0.0f },
 	tiltDeg{ 0.0f },
@@ -10,25 +18,28 @@ Plane::Plane(const std::string& path, Camera& pCamera) :
 	stepY{ 0 },
 	stepZ{ 0 },
 	acceleration{ 0.0f },
-
-	pCamera{ pCamera },
-	cameraOffset{ 0.0f, 10.0f, 35.0f },
-	planeObjModel{ path + relativePath , false },
-	planeModel{ glm::scale(glm::mat4(1.0), glm::vec3(1.0f)) },
-	planeRenderModel{ glm::scale(glm::mat4(1.0), glm::vec3(1.0f)) }
+	move{false},
+	collision{false},
+	ball{ path + "\\Models\\Ball\\source\\FreeStone Sphere.obj", false }
 {
 	planeModel = glm::translate(planeModel, glm::vec3(110.0f, 25.0f, 0.0f));
 	planeModel = glm::translate(planeModel, planeMovement);
 	planeModel = glm::rotate(planeModel, glm::radians(-90.0f), glm::vec3(0, 1, 0));
+	planeModel = glm::rotate(planeModel, glm::radians(tiltDeg), glm::vec3(1, 0, 0));
 
 	planeRenderModel = glm::translate(planeRenderModel, glm::vec3(110.0f, 25.0f, 0.0f));
 	planeRenderModel = glm::translate(planeRenderModel, planeMovement);
 	planeRenderModel = glm::rotate(planeRenderModel, glm::radians(-90.0f), glm::vec3(0, 1, 0));
 
-	//planeModel = glm::rotate(planeModel, glm::radians(tiltDeg), glm::vec3(1, 0, 0));
+	glm::vec4 transformedPoint = planeRenderModel * glm::vec4(tipPlaneOffset, 1.0f);
+	tipPlane = glm::vec3(transformedPoint);
 }
 
 void Plane::processPlaneInput(GLFWwindow* window) {
+	if (collision) {
+		return;
+	}
+
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 		rotationDeg -= 0.005f;
 		if (rotationDeg < -360.0f)
@@ -74,6 +85,7 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		move = true;
 		acceleration += 0.01f;
 		if (acceleration > 20.0f)
 			acceleration = 20.0f;
@@ -157,15 +169,84 @@ void Plane::_updateCamera() {
 	}
 }
 
+glm::vec3 Plane::getTipPlaneModel() {
+	glm::vec4 transformedPoint = planeModel * glm::vec4(tipPlane, 1.0f);
+
+	glm::vec3 transformedVec3 = glm::vec3(transformedPoint);
+
+	return transformedPoint;
+}
+
 void Plane::render() {
 	_updateCamera();
 
-	//glm::mat4 auxiliaryModel;
 	planeRenderModel = glm::translate(planeModel, planeMovement);
 	planeRenderModel = glm::rotate(planeRenderModel, -glm::radians(tiltDeg), glm::vec3{ 0, 0, 1 });
 	planeRenderModel = glm::rotate(planeRenderModel, -rotationDeg, glm::vec3{ 0, 1, 0 });
 	planeRenderModel = glm::rotate(planeRenderModel, -turnDeg, glm::vec3{ 1, 0, 0 });
 
+	glm::vec4 transformedPoint = planeRenderModel * glm::vec4(tipPlaneOffset, 1.0f);
+	anteriorTipPlane = tipPlane;
+	tipPlane = glm::vec3(transformedPoint);
+
+	/*std::cout << "anterior" << anteriorTipPlane.x << " " << anteriorTipPlane.y << " " << anteriorTipPlane.z << std::endl;
+	std::cout << "current -> " << tipPlane.x << " " << tipPlane.y << " " << tipPlane.z << std::endl;*/
 
 	utils::DrawModel(MainWindow::instance().sunShader, planeRenderModel, planeObjModel);
+}
+
+void Plane::checkCollison(KDTree& tree) {
+	if (acceleration)
+	{
+		auto closestPoints{ tree.findClosestPoints(tipPlane, 3) };
+
+		using namespace glm;
+
+		vec3 A{ closestPoints[0] };
+		vec3 B{ closestPoints[1] };
+		vec3 C{ closestPoints[2] };
+
+		auto modelA = glm::translate(glm::mat4(1.f), A);
+		modelA = glm::scale(modelA, glm::vec3(5.f));
+		auto modelB = glm::translate(glm::mat4(1.f), B);
+		modelB = glm::scale(modelB, glm::vec3(5.f));
+		auto modelC = glm::translate(glm::mat4(1.f), C);
+		modelC = glm::scale(modelC, glm::vec3(5.f));
+
+		utils::DrawModel(MainWindow::instance().sunShader, modelA, ball);
+		utils::DrawModel(MainWindow::instance().sunShader, modelB, ball);
+		utils::DrawModel(MainWindow::instance().sunShader, modelC, ball);
+
+		std::cout << A.x << " " << A.y << " " << A.z << std::endl <<
+					 B.x << " " << B.y << " " << B.z << std::endl <<
+					 C.x << " " << C.y << " " << C.z << std::endl << std::endl;
+
+		vec3 AB{ B - A };
+		vec3 AC{ C - A };
+
+		vec3 NORM{ normalize(cross(AB, AC)) };
+
+		float D{ -dot(NORM, A) };
+		
+		float lhs =
+			NORM.x * tipPlane.x +
+			NORM.y * tipPlane.y +
+			NORM.z * tipPlane.z + D;
+
+		float distStart = glm::dot(NORM, anteriorTipPlane) + D;
+		float distEnd = glm::dot(NORM, tipPlane) + D;
+		
+		if (distStart * distEnd < 0.0f && glm::length(NORM) > 0.0f) {
+			move = false;
+			collision = true;
+		}
+
+		/*const float epsilon = 1.f;
+		if (std::fabs(lhs) < epsilon)  {
+			std::cout << "Collided";
+			
+			move = false;
+			collision = true;
+		}*/
+	}
 }

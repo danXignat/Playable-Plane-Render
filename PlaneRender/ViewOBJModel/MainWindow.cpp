@@ -20,26 +20,31 @@ MainWindow& MainWindow::instance() {
 
 void MainWindow::run() {
 	glm::vec3 lightPos(0.0f, 10.0f, 0.0f);
-	//glm::vec3 cubePos(0.0f, 11.0f, 1.0f);
-	Plane plane{ currentPath, *pCamera };
+	glm::vec3 cubePos(0.0f, 11.0f, 1.0f);
 
-	std::string mountain1FileName = (currentPath + "\\Models\\Mountain1\\source\\mountain1.obj");
-	Model mountain1ObjModel{ mountain1FileName, false };
+	Mountain mountain{ currentPath };
+	Plane plane{ currentPath, *pCamera };
 
 	std::string airPortObjFileName = (currentPath + "\\Models\\Airportnew\\ImageToStl.com_airport.obj");
 	Model airPortObjModel{ airPortObjFileName, false };
 
-	std::string towerObjFileName = (currentPath + "\\Models\\Tower\\tower.obj");
+	std::string towerObjFileName = (currentPath + "\\Models\\Ball\\source\\FreeStone Sphere.obj");
 	Model towerObjModel{ towerObjFileName, false };
 
 	Sun sun(2500.0f, 2100.0f); // Orbit radius, elevation range
-	float currentTime = sun.getRealTimeInHours()-4; //get time
+	float currentTime = sun.getRealTimeInHours()+8; //get time
 	Skybox skybox{ currentPath, *pCamera,currentTime };
 	sun.initialize(currentPath+"\\Models\\Sun\\sun.obj");
+
+	auto pos = pCamera->GetPosition();
 
 	while (!glfwWindowShouldClose(window)) {
 		_processInput();
 		plane.processPlaneInput(window);
+
+		if (pos != pCamera->GetPosition()) {
+			pos = pCamera->GetPosition();
+		}
 
 		double currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
@@ -57,7 +62,7 @@ void MainWindow::run() {
 		//utils::LoadLightningShader(*pCamera, lightingShader, lightPos);
 		utils::LoadLighningTextureShaders(*pCamera, sunShader, lightPos);
 
-		currentTime = sun.getRealTimeInHours()-4; // Get current time
+		currentTime = sun.getRealTimeInHours()+8; // Get current time
 		// Render the sun
 		sun.render(sunShader, currentTime, pCamera->GetPosition());
 
@@ -65,17 +70,12 @@ void MainWindow::run() {
 		airportModel = glm::rotate(airportModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
 		utils::DrawModel(sunShader, airportModel, airPortObjModel);
 
-		//glm::mat4 towerModel = glm::scale(glm::mat4(1.0), glm::vec3(0.5f));
-		//towerModel = glm::rotate(towerModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
-		//utils::DrawModel(sunShader, towerModel, towerObjModel);
-
-		glm::mat4 mountain1Model = glm::scale(glm::mat4(1.0), glm::vec3(3.f));
-		mountain1Model = glm::rotate(mountain1Model, glm::radians(180.0f), glm::vec3(0, 1, 0));
-		mountain1Model = glm::translate(mountain1Model, glm::vec3(-600.0f, -20.0f, 550.0f));
-		utils::DrawModel(sunShader, mountain1Model, mountain1ObjModel);
+		mountain.render();
 		plane.render();
-		//if(currentTime>7.5&&currentTime<21)
+		plane.checkCollison(mountain.kdTree);
+		sun.render(sunShader, currentTime, pCamera->GetPosition());
 		skybox.render();
+
 		/*glm::mat4 towerModel = glm::scale(glm::mat4(1.0), glm::vec3(0.5f));
 		towerModel = glm::rotate(towerModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
 		utils::DrawModel(lightingWithTextureShader, towerModel, towerObjModel);*/
