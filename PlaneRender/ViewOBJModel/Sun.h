@@ -33,6 +33,8 @@ public:
     // Gets the current real-world time in hours (24-hour format)
     float getRealTimeInHours() const;
 
+    glm::vec3& getPosition();
+
 private:
     float radius;          // Radius of the sun's orbit
     float elevationRange;  // Maximum height (elevation) of the sun

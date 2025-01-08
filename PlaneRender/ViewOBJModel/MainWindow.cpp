@@ -6,7 +6,8 @@ MainWindow::MainWindow() :
 	currentPath{ _initCurrPath() },
 	lightingShader{ (currentPath + "\\Shaders\\PhongLight.vs").c_str(), (currentPath + "\\Shaders\\PhongLight.fs").c_str() },
 	sunShader{ (currentPath + "\\Shaders\\PhongLightWithTexture.vs").c_str(), (currentPath + "\\Shaders\\PhongLightWithTexture.fs").c_str() },
-	lampShader{ (currentPath + "\\Shaders\\Lamp.vs").c_str(), (currentPath + "\\Shaders\\Lamp.fs").c_str() }
+	lampShader{ (currentPath + "\\Shaders\\Lamp.vs").c_str(), (currentPath + "\\Shaders\\Lamp.fs").c_str() }/*,
+	mainShader{ (currentPath + "\\Shaders\\main.vs").c_str(), (currentPath + "\\Shaders\\main.fs").c_str() }*/
 {
 	_initIcon();
 	_initBuffer();
@@ -36,11 +37,55 @@ void MainWindow::run() {
 	Skybox skybox{ currentPath, *pCamera,currentTime };
 	sun.initialize(currentPath+"\\Models\\Sun\\sun.obj");
 
+	//Shadow shadow {(currentPath + "\\Shaders\\Shadow.vs").c_str(), (currentPath + "\\Shaders\\Shadow.fs").c_str() };
+
 	auto pos = pCamera->GetPosition();
 
 	while (!glfwWindowShouldClose(window)) {
 		_processInput();
+
 		plane.processPlaneInput(window);
+
+		glm::mat4 airportModel = glm::scale(glm::mat4(1.0), glm::vec3(0.5f));
+		airportModel = glm::rotate(airportModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
+		
+		glm::mat4 mountain1Model = glm::scale(glm::mat4(1.0), glm::vec3(3.f));
+		mountain1Model = glm::rotate(mountain1Model, glm::radians(180.0f), glm::vec3(0, 1, 0));
+		mountain1Model = glm::translate(mountain1Model, glm::vec3(-600.0f, -20.0f, 550.0f));
+
+		/*std::vector<Model> objects;
+
+		objects.push_back(plane.getObject());
+		objects.push_back(airPortObjModel);
+		objects.push_back(mountain1ObjModel);
+
+		std::vector<glm::mat4> models;
+
+		models.push_back(plane.getModel());
+		models.push_back(airportModel);
+		models.push_back(mountain1Model);
+
+		glm::vec3 lightPos = sun.getPosition() + glm::vec3(5.f, 0.f, 5.f);
+
+		glm::vec3 lightTarget = plane.getPosition();
+
+		glm::vec3 lightDir = glm::normalize(lightPos - lightTarget);
+
+		glm::mat4 lightProjection = glm::ortho(-200.0f, 200.0f, -200.0f, 200.0f, 0.1f, 300.0f);
+
+		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+
+		if (glm::dot(lightDir, up) > 0.99f) {
+			up = glm::vec3(1.0f, 0.0f, 0.0f);
+		}
+		glm::mat4 lightView = glm::lookAt(lightPos, lightTarget, up);
+
+		glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+
+		shadow.RenderShadowMap(mainShader, lightSpaceMatrix, objects, models, lightPos, *pCamera);*/
+
+		/*glfwSwapBuffers(window);
+		glfwPollEvents();*/
 
 		if (pos != pCamera->GetPosition()) {
 			pos = pCamera->GetPosition();
@@ -66,8 +111,7 @@ void MainWindow::run() {
 		// Render the sun
 		sun.render(sunShader, currentTime, pCamera->GetPosition());
 
-		glm::mat4 airportModel = glm::scale(glm::mat4(1.0), glm::vec3(0.5f));
-		airportModel = glm::rotate(airportModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
+
 		utils::DrawModel(sunShader, airportModel, airPortObjModel);
 
 		mountain.render();

@@ -87,6 +87,18 @@
     <None Include="..\Shaders\Sun.vs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="main.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="main.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\Shadow.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\Shadow.fs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mesh.h">

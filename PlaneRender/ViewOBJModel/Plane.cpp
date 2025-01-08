@@ -2,7 +2,7 @@
 #include "utils.h"
 
 Plane::Plane(const std::string& path, Camera& pCamera) :
-	planeObjModel{ path + "\\Models\\Plane\\source\\PlaneClosedChute.obj" , false },
+	//planeObjModel{ path + "\\Models\\Plane\\source\\PlaneClosedChute.obj" , false },
 	pCamera{ pCamera },
 
 	tipPlaneOffset{ -16.359f, 0.027f, - 1.049f },
@@ -18,16 +18,19 @@ Plane::Plane(const std::string& path, Camera& pCamera) :
 	stepY{ 0 },
 	stepZ{ 0 },
 	acceleration{ 0.0f },
+
+	planeObjModel{ path + relativePath , false },
+	planeBase { 110.0f, 25.0f, 0.0f },
 	move{false},
 	collision{false},
 	ball{ path + "\\Models\\Ball\\source\\FreeStone Sphere.obj", false }
 {
-	planeModel = glm::translate(planeModel, glm::vec3(110.0f, 25.0f, 0.0f));
+	planeModel = glm::translate(planeModel, planeBase);
 	planeModel = glm::translate(planeModel, planeMovement);
 	planeModel = glm::rotate(planeModel, glm::radians(-90.0f), glm::vec3(0, 1, 0));
 	planeModel = glm::rotate(planeModel, glm::radians(tiltDeg), glm::vec3(1, 0, 0));
 
-	planeRenderModel = glm::translate(planeRenderModel, glm::vec3(110.0f, 25.0f, 0.0f));
+	planeRenderModel = glm::translate(planeRenderModel, planeBase);
 	planeRenderModel = glm::translate(planeRenderModel, planeMovement);
 	planeRenderModel = glm::rotate(planeRenderModel, glm::radians(-90.0f), glm::vec3(0, 1, 0));
 
@@ -44,9 +47,12 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 		rotationDeg -= 0.005f;
 		if (rotationDeg < -360.0f)
 			rotationDeg = 0.0f;
-		turnDeg -= 0.005f;
-		if (turnDeg < -glm::radians(80.0f))
-			turnDeg = -glm::radians(80.0f);
+		std::cout << planeBase[1] + planeMovement[1] << " fata de " << planeMovement[1] + 3.f;
+		if (planeBase[1] + planeMovement[1] > planeMovement[1] + 3.f) {
+			turnDeg -= 0.005f;
+			if (turnDeg < -glm::radians(80.0f))
+				turnDeg = -glm::radians(80.0f);
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
 
@@ -55,9 +61,11 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 		rotationDeg += 0.005f;
 		if (rotationDeg > 360.0f)
 			rotationDeg = 0.0f;
-		turnDeg += 0.005f;
-		if (turnDeg > glm::radians(80.0f))
-			turnDeg = glm::radians(80.0f);
+		if (planeBase[1] + planeMovement[1] > planeMovement[1] + 3.f) {
+			turnDeg += 0.005f;
+			if (turnDeg > glm::radians(80.0f))
+				turnDeg = glm::radians(80.0f);
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
 
@@ -91,7 +99,7 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 			acceleration = 20.0f;
 	}
 	else {
-		acceleration -= 0.005f;
+		acceleration -= 0.0005f;
 		if (acceleration < 0.0f)
 			acceleration = 0;
 	}
@@ -99,23 +107,7 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 
 	}
 
-	if (!(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) && !(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)) {
-		//std::cout << "Here: ";
-		if (turnDeg < 0.0f) {
-			std::cout << "Increasing Turn: ";
-			turnDeg += 0.005f;
-			if (turnDeg > 0.0f)
-				turnDeg = 0.0f;
-		}
-		else if (turnDeg > 0.0f) {
-			std::cout << "Decreasing Turn: ";
-			turnDeg -= 0.005f;
-			if (turnDeg < 0.0f)
-				turnDeg = 0.0f;
-		}
-	}
-
-	if (!(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) && !(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)) {
+	if (!(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) && !(glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)) {
 		if (tiltDeg < 0) {
 			tiltDeg += 0.5f;
 			stepY -= 0.05f;
@@ -131,6 +123,22 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 				tiltDeg = 0.0f;
 			if (stepY > 0)
 				stepY = 0;
+		}
+	}
+
+	if (!(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) && !(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)) {
+		
+		if (turnDeg < 0.0f) {
+			//std::cout << "Increasing Turn: ";
+			turnDeg += 0.005f;
+			if (turnDeg > 0.0f)
+				turnDeg = 0.0f;
+		}
+		else if (turnDeg > 0.0f) {
+			//std::cout << "Decreasing Turn: ";
+			turnDeg -= 0.005f;
+			if (turnDeg < 0.0f)
+				turnDeg = 0.0f;
 		}
 	}
 	
@@ -249,4 +257,20 @@ void Plane::checkCollison(KDTree& tree) {
 			collision = true;
 		}*/
 	}
+}
+
+
+Model& Plane::getObject()
+{
+	return planeObjModel;
+}
+
+glm::mat4& Plane::getModel()
+{
+	return planeRenderModel;
+}
+
+glm::vec3 Plane::getPosition()
+{
+	return planeMovement + glm::vec3(110.0f, 25.0f, 0.0f);
 }

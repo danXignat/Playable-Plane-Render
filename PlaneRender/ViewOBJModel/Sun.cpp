@@ -35,6 +35,11 @@ float Sun::getRealTimeInHours() const {
     return static_cast<float>(local_time.tm_hour) + static_cast<float>(local_time.tm_min) / 60.0f;
 }
 
+glm::vec3& Sun::getPosition() 
+{
+    return position;
+}
+
 // Renders the sun, updates its position based on real time, and sets light direction in the shader
 void Sun::render(Shader& shader, float realTime, const glm::vec3 cameraPosition) {
     if (!sunModel) return; // Ensure the model is initialized

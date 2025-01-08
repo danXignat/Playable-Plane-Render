@@ -14,14 +14,17 @@ public:
 	Plane(const std::string& path, Camera& pCamera);
 
 	void processPlaneInput(GLFWwindow* window);
-	glm::vec3 getTranslation() const;
-	glm::mat4 getRotation();
 	void render();
+	Model& getObject();
+	glm::mat4& getModel();
+	glm::mat4 getRotation();
+	glm::vec3 getTranslation() const;
+	glm::vec3 getPosition();
 
 	void checkCollison(KDTree& tree);
 	glm::vec3 getTipPlaneModel();
 
-	bool isOnPlane();
+	//bool isOnPlane();
 
 private:
 	void _updateCamera();
@@ -37,6 +40,7 @@ private:
 	glm::vec3 tipPlaneOffset;
 	glm::vec3 anteriorTipPlane;
 	glm::vec3 tipPlane;
+	glm::vec3 planeBase;
 
 	glm::mat4 planeModel;
 	glm::mat4 planeRenderModel;

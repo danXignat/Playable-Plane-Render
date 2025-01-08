@@ -81,8 +81,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\_external\GLEW;..\_external\glfw;..\_external\glm;..\_external\stb;$(IncludePath);..\_external\</IncludePath>
-    <LibraryPath>..\_external\GLFW\x64;..\_external\GLEW\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\_external\GLEW;..\_external\glfw;..\_external\glm;..\_external\stb;$(IncludePath);..\_external\;C:\Program Files %28x86%29\OpenAL 1.1 SDK\include</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\OpenAL 1.1 SDK\libs\Win64;..\_external\GLFW\x64;..\_external\GLEW\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -129,6 +129,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\GL\GLFWx64\lib-vc2022\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>C:\Program Files (x86)\OpenAL 1.1 SDK\libs\Win64\OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -158,8 +159,10 @@
     <ClCompile Include="Mountain.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Shadow.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Sounds.cpp" />
     <ClCompile Include="Sun.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -169,10 +172,14 @@
     <None Include="..\Shaders\PhongLight.vs" />
     <None Include="..\Shaders\PhongLightWithTexture.fs" />
     <None Include="..\Shaders\PhongLightWithTexture.vs" />
+    <None Include="..\Shaders\Shadow.fs" />
+    <None Include="..\Shaders\Shadow.vs" />
     <None Include="..\Shaders\Skybox.fs" />
     <None Include="..\Shaders\Skybox.vs" />
     <None Include="..\Shaders\Sun.fs" />
     <None Include="..\Shaders\Sun.vs" />
+    <None Include="main.fs" />
+    <None Include="main.vs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -189,7 +196,9 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="settings.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Shadow.h" />
     <ClInclude Include="Skybox.h" />
+    <ClInclude Include="Sounds.h" />
     <ClInclude Include="Sun.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="utils.h" />

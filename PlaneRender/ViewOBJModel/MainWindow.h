@@ -13,6 +13,7 @@
 #include "Model.h"
 #include "Plane.h"
 #include "Sun.h"
+#include "Shadow.h"
 #include "Mountain.h"
 
 #pragma comment (lib, "glfw3dll.lib")
@@ -39,6 +40,7 @@ private:
 	GLFWwindow* _initWindow();
 	std::string _initCurrPath();
 	void _initBuffer();
+	
 	void _deallocate();
 	void _initIcon();
 	void _processInput();
@@ -58,6 +60,7 @@ public:
 	Shader lightingShader;
 	Shader lampShader;
 	Shader sunShader;
+	//Shader mainShader;
 
 private:
 	static std::unique_ptr<MainWindow> m_instance;
