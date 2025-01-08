@@ -132,7 +132,7 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 			acceleration = 0;
 	}
 
-	else if (!(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) && !(glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)) {
+	if (!(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) && !(glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)) {
 		if (tiltDeg < 0) {
 			tiltDeg += 0.5f;
 			stepY -= 0.05f;
@@ -151,7 +151,7 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 		}
 	}
 
-	else if (!(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) && !(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)) {
+	if (!(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) && !(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)) {
 		
 		if (turnDeg < 0.0f) {
 			//std::cout << "Increasing Turn: ";
