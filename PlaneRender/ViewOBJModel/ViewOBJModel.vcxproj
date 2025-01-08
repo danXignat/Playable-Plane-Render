@@ -158,7 +158,9 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Mountain.cpp" />
+    <ClCompile Include="Object.cpp" />
     <ClCompile Include="Plane.cpp" />
+    <ClCompile Include="Relief.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Shadow.cpp" />
     <ClCompile Include="Skybox.cpp" />
@@ -194,7 +196,9 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Mountain.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="Plane.h" />
+    <ClInclude Include="Relief.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="settings.h" />
     <ClInclude Include="Shader.h" />
@@ -208,6 +212,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="C:\Users\ignat\Desktop\mountain blender\mountain_vertices.txt" />
+    <Text Include="relief_vertices.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

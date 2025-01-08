@@ -3,6 +3,12 @@
 #include "MainWindow.h"
 #include "KDTree.h"
 
+enum class PlaneState {
+	OnGround,
+	InAir,
+	Crashed
+};
+
 class Plane {
 public:
 	static constexpr const char* const relativePath{ "\\Models\\Plane\\source\\PlaneClosedChute.obj" };
@@ -15,6 +21,7 @@ public:
 
 	std::string rootPath;
 
+	void setState(PlaneState other_state);
 	void processPlaneInput(GLFWwindow* window);
 	void render();
 	Model& getObject();
@@ -30,8 +37,12 @@ private:
 	void _updateCamera();
 
 private:
+	PlaneState state;
+
 	Model ball;
 	Model planeObjModel;
+	Model wreckedPlaneObjModel;
+	Model inAirObjModel;
 	Camera& pCamera;
 
 	glm::vec3 cameraOffset;

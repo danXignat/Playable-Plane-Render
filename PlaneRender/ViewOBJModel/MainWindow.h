@@ -15,6 +15,7 @@
 #include "Sun.h"
 #include "Shadow.h"
 #include "Mountain.h"
+#include "Relief.h"
 #include "Clouds.h"
 #include "Sound.h"
 

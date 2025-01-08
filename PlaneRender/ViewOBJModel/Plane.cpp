@@ -3,6 +3,7 @@
 
 Plane::Plane(const std::string& path, Camera& pCamera) :
 	//planeObjModel{ path + "\\Models\\Plane\\source\\PlaneClosedChute.obj" , false },
+	state{PlaneState::OnGround},
 	pCamera{ pCamera },
 	rootPath{path},
 	tipPlaneOffset{ -16.359f, 0.027f, - 1.049f },
@@ -20,10 +21,13 @@ Plane::Plane(const std::string& path, Camera& pCamera) :
 	acceleration{ 0.0f },
 
 	planeObjModel{ path + relativePath , false },
+	wreckedPlaneObjModel{ path + "\\Models\\Plane\\wreck\\PlaneWreck.obj", false },
+	inAirObjModel{ path + "\\Models\\Plane\\wreck\\PlaneClosedAll.obj", false },
+
+	ball{ path + "\\Models\\Ball\\source\\FreeStone Sphere.obj", false },
 	planeBase { 110.0f, 25.0f, 0.0f },
 	move{false},
-	collision{false},
-	ball{ path + "\\Models\\Ball\\source\\FreeStone Sphere.obj", false }
+	collision{false}
 {
 	planeModel = glm::translate(planeModel, planeBase);
 	planeModel = glm::translate(planeModel, planeMovement);
@@ -68,7 +72,7 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-
+		state = PlaneState::InAir;
 	}
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
@@ -107,6 +111,20 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 		acceleration -= 0.005f;
 		if (acceleration < 0.0f)
 			acceleration = 0;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+		state = PlaneState::OnGround;
+		planeRenderModel = planeModel;
+		collision = false;
+		move = false;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+		state = PlaneState::OnGround;
+		planeRenderModel = planeModel;
+		collision = false;
+		move = false;
 	}
 
 	if (!(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) && !(glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)) {
@@ -180,11 +198,11 @@ void Plane::_updateCamera() {
 }
 
 glm::vec3 Plane::getTipPlaneModel() {
-	glm::vec4 transformedPoint = planeModel * glm::vec4(tipPlane, 1.0f);
+	return tipPlane;
+}
 
-	glm::vec3 transformedVec3 = glm::vec3(transformedPoint);
-
-	return transformedPoint;
+void Plane::setState(PlaneState other_state) {
+	state = other_state;
 }
 
 void Plane::render() {
@@ -201,6 +219,21 @@ void Plane::render() {
 
 	/*std::cout << "anterior" << anteriorTipPlane.x << " " << anteriorTipPlane.y << " " << anteriorTipPlane.z << std::endl;
 	std::cout << "current -> " << tipPlane.x << " " << tipPlane.y << " " << tipPlane.z << std::endl;*/
+	
+	switch (state)
+	{
+	case PlaneState::OnGround:
+		utils::DrawModel(MainWindow::instance().sunShader, planeRenderModel, planeObjModel);
+		break;
+	case PlaneState::InAir:
+		utils::DrawModel(MainWindow::instance().sunShader, planeRenderModel, inAirObjModel);
+		break;
+	case PlaneState::Crashed:
+		utils::DrawModel(MainWindow::instance().sunShader, planeRenderModel, wreckedPlaneObjModel);
+		break;
+	default:
+		break;
+	}
 
 	if (acceleration >= 1 && sound_start == false) {
 		Sound::stopMusic();
@@ -252,10 +285,12 @@ void Plane::checkCollison(KDTree& tree) {
 
 		float distStart = glm::dot(NORM, anteriorTipPlane) + D;
 		float distEnd = glm::dot(NORM, tipPlane) + D;
-		
-		if (distStart * distEnd < 0.0f && glm::length(NORM) > 0.0f) {
+
+		bool isAbove = (tipPlane.y < A.y || tipPlane.y < B.y || tipPlane.y < C.y);
+		if (distStart * distEnd < 0.0f && isAbove) {
 			move = false;
 			collision = true;
+			state = PlaneState::Crashed;
 
 			Sound::stopMusic();
 			Sound::playMusic(rootPath, Sound::ExplosionPath);
