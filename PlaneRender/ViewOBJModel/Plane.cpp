@@ -43,6 +43,27 @@ Plane::Plane(const std::string& path, Camera& pCamera) :
 }
 
 void Plane::processPlaneInput(GLFWwindow* window) {
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+		state = PlaneState::OnGround;
+		planeRenderModel = planeModel;
+		collision = false;
+		move = false;
+
+		planeMovement = { 0.0f, 0.0f, 0.0f };
+		rotationDeg = 0.0f;
+		tiltDeg = 0.0f;
+		turnDeg = 0.0f;
+		stepX = 0;
+		stepY = 0;
+		stepZ = 0;
+		acceleration = 0.0f;
+
+		Sound::stopMusic();
+		Sound::playMusic(rootPath, Sound::ForestPath);
+
+		sound_start = false;
+	}
+
 	if (collision) {
 		return;
 	}
@@ -111,31 +132,7 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 			acceleration = 0;
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-		state = PlaneState::OnGround;
-		planeRenderModel = planeModel;
-		collision = false;
-		move = false;
-
-		planeMovement = { 0.0f, 0.0f, 0.0f };
-		rotationDeg = 0.0f;
-		tiltDeg = 0.0f;
-		turnDeg = 0.0f;
-		stepX = 0;
-		stepY = 0;
-		stepZ = 0;
-		acceleration =  0.0f;
-
-		Sound::stopMusic();
-		Sound::playMusic(rootPath, Sound::ForestPath);
-		
-		sound_start = false;
-
-		std::cout << "miau";
-	}
-	
-
-	if (!(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) && !(glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)) {
+	else if (!(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) && !(glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)) {
 		if (tiltDeg < 0) {
 			tiltDeg += 0.5f;
 			stepY -= 0.05f;
@@ -154,7 +151,7 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 		}
 	}
 
-	if (!(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) && !(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)) {
+	else if (!(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) && !(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)) {
 		
 		if (turnDeg < 0.0f) {
 			//std::cout << "Increasing Turn: ";

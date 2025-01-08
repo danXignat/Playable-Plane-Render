@@ -135,7 +135,6 @@ void MainWindow::run() {
 		utils::DrawModel(sunShader, mountain3Model, mountainObjModel);
 
 		relief.render();
-		plane.render();
 		
 		if (mountain.inArea(plane.getTipPlaneModel())) {
 			plane.checkCollison(mountain.kdTree);
@@ -143,6 +142,7 @@ void MainWindow::run() {
 		else {
 			plane.checkCollison(relief.kdTree);
 		}
+		plane.render();
 
 		sun.render(sunShader, currentTime, pCamera->GetPosition());
 		skybox.render();
