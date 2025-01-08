@@ -95,11 +95,20 @@ constexpr const float SKYBOX_VERTICES[] = {
 };
 
 
-constexpr const std::array<const char*, 6> SKYBOX_FACES_PATHS {
+constexpr const std::array<const char*, 6> SKYBOX_FACES_NIGHT_PATHS {
 	"\\SkyboxImg\\RightImage.png",
 	"\\SkyboxImg\\LeftImage.png",
 	"\\SkyboxImg\\TopImage.png",
 	"\\SkyboxImg\\BottomImage.png",
 	"\\SkyboxImg\\FrontImage.png",
 	"\\SkyboxImg\\BackImage.png"
+};
+
+constexpr const std::array<const char*, 6> SKYBOX_FACES_DAY_PATHS{
+	"\\SkyboxImg\\ClearSky.png",
+	"\\SkyboxImg\\ClearSky.png",
+	"\\SkyboxImg\\ClearSky.png",
+	"\\SkyboxImg\\ClearSky.png",
+	"\\SkyboxImg\\ClearSky.png",
+	"\\SkyboxImg\\ClearSky.png"
 };

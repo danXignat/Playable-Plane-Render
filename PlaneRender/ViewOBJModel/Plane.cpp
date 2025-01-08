@@ -88,7 +88,7 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 	}
 
 	if (!(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) && !(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)) {
-		std::cout << "Here: ";
+		//std::cout << "Here: ";
 		if (turnDeg < 0.0f) {
 			std::cout << "Increasing Turn: ";
 			turnDeg += 0.005f;
@@ -122,8 +122,8 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 		}
 	}
 	
-	std::cout << "Left turn bound: " << -glm::radians(80.0f) << ", " << "Right turn bound: " << glm::radians(80.0f) << std::endl;
-	std::cout << "Acceleration: " << acceleration << ", Rotation: " << rotationDeg << ", Turn: " << turnDeg << ", Tilt: " << tiltDeg << ", Forward : " << stepY << ", Upward : " << glm::tan(stepY) << "Steps:" << stepX << ":" << stepY << ":" << stepZ << std::endl;
+	//std::cout << "Left turn bound: " << -glm::radians(80.0f) << ", " << "Right turn bound: " << glm::radians(80.0f) << std::endl;
+	//std::cout << "Acceleration: " << acceleration << ", Rotation: " << rotationDeg << ", Turn: " << turnDeg << ", Tilt: " << tiltDeg << ", Forward : " << stepY << ", Upward : " << glm::tan(stepY) << "Steps:" << stepX << ":" << stepY << ":" << stepZ << std::endl;
 
 	stepX = glm::cos(rotationDeg) * baseStepX * acceleration;
 	stepZ = glm::sin(rotationDeg) * baseStepZ * acceleration;

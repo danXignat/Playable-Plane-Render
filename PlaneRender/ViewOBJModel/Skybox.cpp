@@ -1,7 +1,7 @@
 #include "Skybox.h"
 #include "stb_image.h"
 #include <iostream>
-Skybox::Skybox(const std::string& path, const Camera& pCamera) :
+Skybox::Skybox(const std::string& path, const Camera& pCamera,float time) :
     skyboxShader{ (path + "\\Shaders\\Skybox.vs").c_str(), (path + "\\Shaders\\Skybox.fs").c_str() },
     pCamera{ pCamera } {
 
@@ -15,12 +15,18 @@ Skybox::Skybox(const std::string& path, const Camera& pCamera) :
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
     std::vector<std::string> paths;
-
-    std::transform(
-        SKYBOX_FACES_PATHS.begin(), SKYBOX_FACES_PATHS.end(),
-        std::back_inserter(paths),
-        [&path](auto& name) -> std::string { return (path + name).c_str(); }
-    );
+    if(time>7.5&&time<21.5)
+        std::transform(
+          SKYBOX_FACES_DAY_PATHS.begin(), SKYBOX_FACES_DAY_PATHS.end(),
+          std::back_inserter(paths),
+         [&path](auto& name) -> std::string { return (path + name).c_str(); }
+     );
+    else
+        std::transform(
+            SKYBOX_FACES_NIGHT_PATHS.begin(), SKYBOX_FACES_NIGHT_PATHS.end(),
+            std::back_inserter(paths),
+            [&path](auto& name) -> std::string { return (path + name).c_str(); }
+        );
 
     textureID = loadCubemap(paths);
 }

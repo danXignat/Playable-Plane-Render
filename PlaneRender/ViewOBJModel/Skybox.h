@@ -11,7 +11,7 @@ class Skybox {
 public:
     unsigned int VAO, VBO, textureID;
 
-    Skybox(const std::string& path, const Camera& pCamera);
+    Skybox(const std::string& path, const Camera& pCamera,float time);
     void render();
 
 private:

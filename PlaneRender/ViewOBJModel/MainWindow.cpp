@@ -20,10 +20,8 @@ MainWindow& MainWindow::instance() {
 
 void MainWindow::run() {
 	glm::vec3 lightPos(0.0f, 10.0f, 0.0f);
-	glm::vec3 cubePos(0.0f, 11.0f, 1.0f);
-
+	//glm::vec3 cubePos(0.0f, 11.0f, 1.0f);
 	Plane plane{ currentPath, *pCamera };
-	Skybox skybox{ currentPath, *pCamera };
 
 	std::string mountain1FileName = (currentPath + "\\Models\\Mountain1\\source\\mountain1.obj");
 	Model mountain1ObjModel{ mountain1FileName, false };
@@ -34,7 +32,9 @@ void MainWindow::run() {
 	std::string towerObjFileName = (currentPath + "\\Models\\Tower\\tower.obj");
 	Model towerObjModel{ towerObjFileName, false };
 
-	Sun sun(1600.0f, 1000.0f); // Orbit radius 100, elevation range 50
+	Sun sun(2500.0f, 2100.0f); // Orbit radius, elevation range
+	float currentTime = sun.getRealTimeInHours()-4; //get time
+	Skybox skybox{ currentPath, *pCamera,currentTime };
 	sun.initialize(currentPath+"\\Models\\Sun\\sun.obj");
 
 	while (!glfwWindowShouldClose(window)) {
@@ -54,10 +54,10 @@ void MainWindow::run() {
 		//cubePos.x = 10 * sin(glfwGetTime());
 		//cubePos.z = 10 * cos(glfwGetTime());
 
-		utils::LoadLightningShader(*pCamera, lightingShader, lightPos);
+		//utils::LoadLightningShader(*pCamera, lightingShader, lightPos);
 		utils::LoadLighningTextureShaders(*pCamera, sunShader, lightPos);
 
-		float currentTime = sun.getRealTimeInHours(); // Get current time
+		currentTime = sun.getRealTimeInHours()-4; // Get current time
 		// Render the sun
 		sun.render(sunShader, currentTime, pCamera->GetPosition());
 
@@ -73,8 +73,8 @@ void MainWindow::run() {
 		mountain1Model = glm::rotate(mountain1Model, glm::radians(180.0f), glm::vec3(0, 1, 0));
 		mountain1Model = glm::translate(mountain1Model, glm::vec3(-600.0f, -20.0f, 550.0f));
 		utils::DrawModel(sunShader, mountain1Model, mountain1ObjModel);
-
 		plane.render();
+		//if(currentTime>7.5&&currentTime<21)
 		skybox.render();
 		/*glm::mat4 towerModel = glm::scale(glm::mat4(1.0), glm::vec3(0.5f));
 		towerModel = glm::rotate(towerModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
@@ -245,5 +245,5 @@ void MainWindow::key_callback(GLFWwindow* window, int key, int scancode, int act
 
 	glm::vec3 camerapos = pCamera->GetPosition();
 
-	std::cout << "Camera X: " << camerapos[0] << "|  Y: " << camerapos[1] << "|  Z: " << camerapos[2] << "\n";
+	//std::cout << "Camera X: " << camerapos[0] << "|  Y: " << camerapos[1] << "|  Z: " << camerapos[2] << "\n";
 }
