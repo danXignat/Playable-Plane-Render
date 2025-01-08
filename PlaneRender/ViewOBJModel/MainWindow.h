@@ -15,6 +15,10 @@
 #include "Sun.h"
 #include "Shadow.h"
 #include "Mountain.h"
+#include "Clouds.h"
+
+#include <mmsystem.h>
+#pragma comment(lib,"winmm.lib")
 
 #pragma comment (lib, "glfw3dll.lib")
 #pragma comment (lib, "glew32.lib")

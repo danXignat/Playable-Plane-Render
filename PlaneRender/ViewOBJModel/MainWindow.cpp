@@ -20,22 +20,29 @@ MainWindow& MainWindow::instance() {
 }
 
 void MainWindow::run() {
+	//Clouds::setRandom();
+
 	glm::vec3 lightPos(0.0f, 10.0f, 0.0f);
 	glm::vec3 cubePos(0.0f, 11.0f, 1.0f);
 
 	Mountain mountain{ currentPath };
 	Plane plane{ currentPath, *pCamera };
 
+	//std::string cloudObjFileName = (currentPath + "\\Models\\Clouds2\\ImageToStl.com_volume_cloud.obj");
+	//Model cloudObjModel{ cloudObjFileName, false };
+
 	std::string airPortObjFileName = (currentPath + "\\Models\\Airportnew\\ImageToStl.com_airport.obj");
 	Model airPortObjModel{ airPortObjFileName, false };
 
-	std::string towerObjFileName = (currentPath + "\\Models\\Ball\\source\\FreeStone Sphere.obj");
-	Model towerObjModel{ towerObjFileName, false };
-
 	Sun sun(2500.0f, 2100.0f); // Orbit radius, elevation range
-	float currentTime = sun.getRealTimeInHours()+8; //get time
+	float currentTime = sun.getRealTimeInHours()-8; //get time
 	Skybox skybox{ currentPath, *pCamera,currentTime };
 	sun.initialize(currentPath+"\\Models\\Sun\\sun.obj");
+
+	std::vector<glm::vec3> clouds{};
+
+	std::string mountainauxObjFileName = (currentPath + "\\Models\\Mountain3\\ImageToStl.com_mountain_low_poly_for_distant_mountains.obj");
+	Model mountainObjModel{ mountainauxObjFileName, false };
 
 	//Shadow shadow {(currentPath + "\\Shaders\\Shadow.vs").c_str(), (currentPath + "\\Shaders\\Shadow.fs").c_str() };
 
@@ -49,9 +56,13 @@ void MainWindow::run() {
 		glm::mat4 airportModel = glm::scale(glm::mat4(1.0), glm::vec3(0.5f));
 		airportModel = glm::rotate(airportModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
 		
-		glm::mat4 mountain1Model = glm::scale(glm::mat4(1.0), glm::vec3(3.f));
+		/*glm::mat4 mountain1Model = glm::scale(glm::mat4(1.0), glm::vec3(3.f));
 		mountain1Model = glm::rotate(mountain1Model, glm::radians(180.0f), glm::vec3(0, 1, 0));
-		mountain1Model = glm::translate(mountain1Model, glm::vec3(-600.0f, -20.0f, 550.0f));
+		mountain1Model = glm::translate(mountain1Model, glm::vec3(-600.0f, -20.0f, 550.0f));*/
+
+		glm::mat4 mountain3Model = glm::scale(glm::mat4(1.0), glm::vec3(1.5f));
+		mountain3Model = glm::translate(mountain3Model, glm::vec3(200, -100, 900));
+		mountain3Model = glm::rotate(mountain3Model, glm::radians(-90.0f), glm::vec3(0, 1, 0));
 
 		/*std::vector<Model> objects;
 
@@ -107,7 +118,7 @@ void MainWindow::run() {
 		//utils::LoadLightningShader(*pCamera, lightingShader, lightPos);
 		utils::LoadLighningTextureShaders(*pCamera, sunShader, lightPos);
 
-		currentTime = sun.getRealTimeInHours()+8; // Get current time
+		currentTime = sun.getRealTimeInHours()-8; // Get current time
 		// Render the sun
 		sun.render(sunShader, currentTime, pCamera->GetPosition());
 
@@ -115,6 +126,13 @@ void MainWindow::run() {
 		utils::DrawModel(sunShader, airportModel, airPortObjModel);
 
 		mountain.render();
+		/*for (int i = 0; i < Clouds::NO_CLOUDS; i++) {
+			glm::mat4 location{ 1.0f };
+			location = glm::translate(location, clouds[i]);
+			utils::DrawModel(sunShader, location, cloudObjModel);
+		}*/
+		utils::DrawModel(sunShader, mountain3Model, mountainObjModel);
+
 		plane.render();
 		plane.checkCollison(mountain.kdTree);
 		sun.render(sunShader, currentTime, pCamera->GetPosition());

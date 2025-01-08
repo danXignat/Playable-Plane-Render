@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClCompile Include="Callback.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Clouds.cpp" />
     <ClCompile Include="FlyingCube.cpp" />
     <ClCompile Include="KDTree.cpp" />
     <ClCompile Include="MainWindow.cpp" />
@@ -184,6 +185,7 @@
   <ItemGroup>
     <ClInclude Include="Callback.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Clouds.h" />
     <ClInclude Include="FlyingCube.h" />
     <ClInclude Include="Includes.h" />
     <ClInclude Include="KDTree.h" />
