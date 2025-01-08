@@ -4,10 +4,10 @@
 Plane::Plane(const std::string& path, Camera& pCamera) :
 	//planeObjModel{ path + "\\Models\\Plane\\source\\PlaneClosedChute.obj" , false },
 	pCamera{ pCamera },
-
+	rootPath{path},
 	tipPlaneOffset{ -16.359f, 0.027f, - 1.049f },
 	cameraOffset{ 0.0f, 10.0f, 35.0f },
-
+	sound_start{false},
 	planeModel{ glm::scale(glm::mat4(1.0), glm::vec3(1.0f)) },
 	planeRenderModel{ glm::scale(glm::mat4(1.0), glm::vec3(1.0f)) },
 	planeMovement{ 0.0f, 0.0f, 0.0f },
@@ -104,7 +104,9 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 			acceleration = 0;
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-
+		acceleration -= 0.005f;
+		if (acceleration < 0.0f)
+			acceleration = 0;
 	}
 
 	if (!(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) && !(glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)) {
@@ -200,6 +202,13 @@ void Plane::render() {
 	/*std::cout << "anterior" << anteriorTipPlane.x << " " << anteriorTipPlane.y << " " << anteriorTipPlane.z << std::endl;
 	std::cout << "current -> " << tipPlane.x << " " << tipPlane.y << " " << tipPlane.z << std::endl;*/
 
+	if (acceleration >= 1 && sound_start == false) {
+		Sound::stopMusic();
+		Sound::playMusic(rootPath, Sound::JetPath);
+		sound_start = true;
+	}
+
+
 	utils::DrawModel(MainWindow::instance().sunShader, planeRenderModel, planeObjModel);
 }
 
@@ -247,6 +256,9 @@ void Plane::checkCollison(KDTree& tree) {
 		if (distStart * distEnd < 0.0f && glm::length(NORM) > 0.0f) {
 			move = false;
 			collision = true;
+
+			Sound::stopMusic();
+			Sound::playMusic(rootPath, Sound::ExplosionPath);
 		}
 
 		/*const float epsilon = 1.f;

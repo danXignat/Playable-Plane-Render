@@ -13,6 +13,8 @@ public:
 public:
 	Plane(const std::string& path, Camera& pCamera);
 
+	std::string rootPath;
+
 	void processPlaneInput(GLFWwindow* window);
 	void render();
 	Model& getObject();
@@ -23,8 +25,6 @@ public:
 
 	void checkCollison(KDTree& tree);
 	glm::vec3 getTipPlaneModel();
-
-	//bool isOnPlane();
 
 private:
 	void _updateCamera();
@@ -44,6 +44,8 @@ private:
 
 	glm::mat4 planeModel;
 	glm::mat4 planeRenderModel;
+
+	bool sound_start;
 
 	bool move;
 	bool collision;

@@ -16,6 +16,7 @@
 #include "Shadow.h"
 #include "Mountain.h"
 #include "Clouds.h"
+#include "Sound.h"
 
 #include <mmsystem.h>
 #pragma comment(lib,"winmm.lib")
@@ -67,6 +68,8 @@ public:
 	//Shader mainShader;
 
 	std::string getCurrentPath();
+
+	//void playMusic();
 
 private:
 	static std::unique_ptr<MainWindow> m_instance;
