@@ -49,9 +49,8 @@ void MainWindow::run() {
 
 	auto pos = pCamera->GetPosition();
 	while (!glfwWindowShouldClose(window)) {
-		_processInput();
-
 		plane.processPlaneInput(window);
+		_processInput();
 
 		glm::mat4 airportModel = glm::scale(glm::mat4(1.0), glm::vec3(0.5f));
 		airportModel = glm::rotate(airportModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
@@ -173,10 +172,6 @@ void MainWindow::_processInput() {
 	}
 	else if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
 		pCamera->state = CameraStates::BEHIND_PLANE;
-	}
-
-	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
-		
 	}
 }
 

@@ -58,9 +58,7 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 				turnDeg = -glm::radians(80.0f);
 		}
 	}
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-
-	}
+	
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 		rotationDeg += 0.005f;
 		if (rotationDeg > 360.0f)
@@ -113,19 +111,29 @@ void Plane::processPlaneInput(GLFWwindow* window) {
 			acceleration = 0;
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
 		state = PlaneState::OnGround;
 		planeRenderModel = planeModel;
 		collision = false;
 		move = false;
-	}
 
-	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
-		state = PlaneState::OnGround;
-		planeRenderModel = planeModel;
-		collision = false;
-		move = false;
+		planeMovement = { 0.0f, 0.0f, 0.0f };
+		rotationDeg = 0.0f;
+		tiltDeg = 0.0f;
+		turnDeg = 0.0f;
+		stepX = 0;
+		stepY = 0;
+		stepZ = 0;
+		acceleration =  0.0f;
+
+		Sound::stopMusic();
+		Sound::playMusic(rootPath, Sound::ForestPath);
+		
+		sound_start = false;
+
+		std::cout << "miau";
 	}
+	
 
 	if (!(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) && !(glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)) {
 		if (tiltDeg < 0) {
@@ -240,13 +248,10 @@ void Plane::render() {
 		Sound::playMusic(rootPath, Sound::JetPath);
 		sound_start = true;
 	}
-
-
-	utils::DrawModel(MainWindow::instance().sunShader, planeRenderModel, planeObjModel);
 }
 
 void Plane::checkCollison(KDTree& tree) {
-	if (acceleration)
+	if (collision ==  false)
 	{
 		auto closestPoints{ tree.findClosestPoints(tipPlane, 3) };
 
