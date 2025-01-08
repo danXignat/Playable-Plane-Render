@@ -152,6 +152,11 @@ void MainWindow::_processInput() {
 	}
 }
 
+std::string MainWindow::getCurrentPath()
+{
+	return currentPath;
+}
+
 void MainWindow::_deallocate() {
 	glDeleteVertexArrays(1, &cubeVAO);
 	glDeleteVertexArrays(1, &lightVAO);

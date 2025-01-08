@@ -62,6 +62,8 @@ public:
 	Shader sunShader;
 	//Shader mainShader;
 
+	std::string getCurrentPath();
+
 private:
 	static std::unique_ptr<MainWindow> m_instance;
 
