@@ -81,13 +81,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\_external\GLEW;..\_external\glfw;..\_external\glm;..\_external\stb;$(IncludePath);..\_external\;C:\Program Files %28x86%29\OpenAL 1.1 SDK\include</IncludePath>
-    <LibraryPath>C:\Program Files %28x86%29\OpenAL 1.1 SDK\libs\Win64;..\_external\GLFW\x64;..\_external\GLEW\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files %28x86%29\OpenAL 1.1 SDK\include;..\_external\GLEW;..\_external\glfw;..\_external\glm;..\_external\stb;$(IncludePath);..\_external\;C:\Program Files %28x86%29\OpenAL 1.1 SDK\include</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\OpenAL 1.1 SDK\libs\Win64;C:\Program Files %28x86%29\OpenAL 1.1 SDK\libs\Win64;..\_external\GLFW\x64;..\_external\GLEW\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\Projects\ViewOBJModel\_external\GLEW;..\_external\glfw;..\_external\glm;..\_external\stb;$(IncludePath);..\_external\</IncludePath>
-    <LibraryPath>..\_external\GLFW\x64;..\_external\GLEW\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files %28x86%29\OpenAL 1.1 SDK\include;D:\Projects\ViewOBJModel\_external\GLEW;..\_external\glfw;..\_external\glm;..\_external\stb;$(IncludePath);..\_external\</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\OpenAL 1.1 SDK\libs\Win64;..\_external\GLFW\x64;..\_external\GLEW\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -162,7 +162,6 @@
     <ClCompile Include="Shadow.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Sounds.cpp" />
     <ClCompile Include="Sun.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -198,7 +197,6 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Shadow.h" />
     <ClInclude Include="Skybox.h" />
-    <ClInclude Include="Sounds.h" />
     <ClInclude Include="Sun.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="utils.h" />

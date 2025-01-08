@@ -1,11 +1,10 @@
 #include "MainWindow.h"
 #include "KDTree.h"
-#include "Sounds.h"
 
 #include "random"
 
 int main() {
-    Sounds soundEngine();
+    //Sounds soundEngine();
 
     MainWindow& window = MainWindow::instance();
 
